@@ -12,10 +12,10 @@ import java.util.List;
 public interface MCQRepository extends JpaRepository<MCQ, Integer> {
     @Query("SELECT m FROM MCQ m " +
             "LEFT JOIN m.tags t " +  // Left join with Tag for filtering by tags
-            "WHERE (m.year = :year OR :year IS NULL) " +  // Filter by year (null check)
-            "AND (m.subject = :subject OR :subject IS NULL) " +  // Filter by subject (null check)
-            "AND (LOWER(m.question) LIKE LOWER(CONCAT('%', :search, '%'))) " + // Filter by search term (case-insensitive)
-            "AND (t.word IN (:tags) OR SIZE(:tags) = 0) " + // Filter by tags (empty array check)
+            "WHERE (:year IS NULL OR m.year = :year) " +  // Filter by year (null check)
+            "AND (:subject IS NULL OR m.subject = :subject) " +  // Filter by subject (null check)
+            "AND (:search IS NULL OR (LOWER(m.question) LIKE LOWER(CONCAT('%', :search, '%')))) " + // Filter by search term (case-insensitive)
+            "AND (:tags IS NULL OR t.word IN (:tags)) " + // Filter by tags (empty array check)
             "GROUP BY m.id " +  // Group by MCQ id to avoid duplicates from tags
             "ORDER BY m.similarity DESC")  // Sort by similarity (descending)
     List<MCQ> findAllByFilters(

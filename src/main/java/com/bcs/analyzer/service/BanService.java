@@ -2,11 +2,13 @@ package com.bcs.analyzer.service;
 
 import com.bcs.analyzer.model.Ban;
 import com.bcs.analyzer.repository.BanRepository;
+import com.bcs.analyzer.util.Cache;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service @RequiredArgsConstructor
 public class BanService {
@@ -24,7 +26,9 @@ public class BanService {
 
     public Ban create(String word){
         word = word.toLowerCase();
-        return banRepository.save(new Ban(0, word));
+        Ban result = banRepository.save(new Ban(0, word));
+        reloadBan();
+        return result;
     }
 
     public Ban update(Integer id, String word){
@@ -32,10 +36,21 @@ public class BanService {
         if(banOp.isEmpty()) return null;
         Ban ban = banOp.get();
         ban.setWord(word);
-        return banRepository.save(ban);
+        Ban result = banRepository.save(ban);
+        reloadBan();
+        return result;
     }
 
     public void delete(Integer id){
         banRepository.deleteById(id);
+        reloadBan();
+    }
+
+    private void reloadBan(){
+        Cache.setAllBans(banRepository
+                .findAll()
+                .stream()
+                .map(Ban::getWord)
+                .collect(Collectors.toList()));
     }
 }

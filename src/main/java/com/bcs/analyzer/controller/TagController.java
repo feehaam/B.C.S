@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/tags")
+@RequestMapping("/tags")
 public class TagController {
 
     @Autowired
     private TagService tagService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getTagById(@PathVariable Integer id) {
+    public ResponseEntity<?> getTagById(@PathVariable("id") Integer id) {
         Tag tag = tagService.getTagById(id);
         if (tag == null) {
             return ResponseEntity.notFound().build();
@@ -38,7 +38,7 @@ public class TagController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateTag(@PathVariable Integer id, @RequestBody String word) {
+    public ResponseEntity<?> updateTag(@PathVariable("id") Integer id, @RequestBody String word) {
         Tag updatedTag = tagService.update(id, word);
         if (updatedTag == null) {
             return ResponseEntity.notFound().build();
@@ -47,7 +47,7 @@ public class TagController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteTag(@PathVariable Integer id) {
+    public ResponseEntity<String> deleteTag(@PathVariable("id") Integer id) {
         tagService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body("Tag deleted successfully");
     }

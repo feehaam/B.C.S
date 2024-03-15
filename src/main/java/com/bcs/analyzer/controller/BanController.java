@@ -17,7 +17,7 @@ public class BanController {
     private BanService banService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getBanById(@PathVariable Integer id) {
+    public ResponseEntity<?> getBanById(@PathVariable("id") Integer id) {
         Ban ban = banService.getBanById(id);
         if (ban == null) {
             return ResponseEntity.notFound().build();
@@ -38,7 +38,7 @@ public class BanController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateBan(@PathVariable Integer id, @RequestBody String word) {
+    public ResponseEntity<?> updateBan(@PathVariable("id") Integer id, @RequestBody String word) {
         Ban updatedBan = banService.update(id, word);
         if (updatedBan == null) {
             return ResponseEntity.notFound().build();
@@ -47,7 +47,7 @@ public class BanController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteBan(@PathVariable Integer id) {
+    public ResponseEntity<String> deleteBan(@PathVariable("id") Integer id) {
         banService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body("Ban deleted successfully");
     }
