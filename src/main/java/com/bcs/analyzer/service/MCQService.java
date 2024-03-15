@@ -94,9 +94,6 @@ public class MCQService {
     }
 
     private void updateRecentTags(List<Tag> tags){
-        Cache.setRecentTags(tags
-                .stream()
-                .map(Tag::getWord)
-                .collect(Collectors.toList()));
+        Cache.setRecentTags(tags);
     }
 }

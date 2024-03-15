@@ -4,6 +4,7 @@ import com.bcs.analyzer.model.Ban;
 import com.bcs.analyzer.model.Tag;
 import com.bcs.analyzer.repository.TagRepository;
 import com.bcs.analyzer.util.Cache;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,11 @@ import java.util.stream.Collectors;
 public class TagService {
 
     private final TagRepository tagRepository;
+
+    @PostConstruct
+    private void loadTags(){
+        reloadTags();
+    }
 
     public Tag getTagById(Integer id){
         Optional<Tag> tag = tagRepository.findById(id);
@@ -49,10 +55,6 @@ public class TagService {
     }
 
     private void reloadTags(){
-        Cache.setAllTags(tagRepository
-                .findAll()
-                .stream()
-                .map(Tag::getWord)
-                .collect(Collectors.toList()));
+        Cache.setAllTags(tagRepository.findAll());
     }
 }

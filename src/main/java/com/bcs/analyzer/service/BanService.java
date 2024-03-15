@@ -3,6 +3,7 @@ package com.bcs.analyzer.service;
 import com.bcs.analyzer.model.Ban;
 import com.bcs.analyzer.repository.BanRepository;
 import com.bcs.analyzer.util.Cache;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,11 @@ import java.util.stream.Collectors;
 public class BanService {
 
     private final BanRepository banRepository;
+
+    @PostConstruct
+    private void loadBans(){
+        reloadBan();
+    }
 
     public Ban getBanById(Integer id){
         Optional<Ban> ban = banRepository.findById(id);
