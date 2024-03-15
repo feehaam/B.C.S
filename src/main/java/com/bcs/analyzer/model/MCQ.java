@@ -25,6 +25,7 @@ public class MCQ {
     private Integer answer;
     private String subject;
     private Integer year;
+    private Integer similarity;
     @ManyToMany
     private List<Tag> tags;
 }
