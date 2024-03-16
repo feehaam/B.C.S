@@ -2,8 +2,10 @@ package com.bcs.analyzer.service;
 
 import com.bcs.analyzer.model.MCQ;
 import com.bcs.analyzer.model.MCQDTO;
+import com.bcs.analyzer.model.PendingAnalyzer;
 import com.bcs.analyzer.model.Tag;
 import com.bcs.analyzer.repository.MCQRepository;
+import com.bcs.analyzer.repository.PARepository;
 import com.bcs.analyzer.repository.TagRepository;
 import com.bcs.analyzer.util.Cache;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +20,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service @RequiredArgsConstructor
-public class MCQService {
+public class MCQService extends MCQFormatter{
+    private static final Integer ANALYZER_OPERATION_TYPE = 1;
 
     private final MCQRepository mcqRepository;
     private final TagRepository tagRepository;
+    private final PARepository paRepository;
 
     public MCQ getMCQById(Integer id){
         Optional<MCQ> mcq = mcqRepository.findById(id);
@@ -62,6 +66,7 @@ public class MCQService {
                 .similarity(0)
                 .build();
         var result = mcqRepository.save(mcq);
+        updatePendingAnalyzer(result.getId());
         updateRecentTags(tags);
         return result;
     }
@@ -95,5 +100,9 @@ public class MCQService {
 
     private void updateRecentTags(List<Tag> tags){
         Cache.setRecentTags(tags);
+    }
+
+    private void updatePendingAnalyzer(Integer targetId) {
+        paRepository.save(new PendingAnalyzer(0, targetId, ANALYZER_OPERATION_TYPE));
     }
 }
