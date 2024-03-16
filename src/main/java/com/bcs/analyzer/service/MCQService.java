@@ -48,7 +48,7 @@ public class MCQService {
     }
 
     public MCQ create(MCQDTO mcqdto){
-        List<Tag> tags = tagRepository.findAllByIds(mcqdto.getTagIds());
+        List<Tag> tags = tagRepository.findAllByWords(mcqdto.getTagWords());
         MCQ mcq = MCQ.builder()
                 .question(mcqdto.getQuestion())
                 .optionA(mcqdto.getOptionA())
@@ -70,7 +70,7 @@ public class MCQService {
         Optional<MCQ> mcqOp = mcqRepository.findById(id);
         if(mcqOp.isEmpty()) return null;
         MCQ mcq = mcqOp.get();
-        List<Tag> tags = tagRepository.findAllByIds(mcqdto.getTagIds());
+        List<Tag> tags = tagRepository.findAllByWords(mcqdto.getTagWords());
         MCQ mcqUpdated = MCQ.builder()
                 .id(id)
                 .question(mcqdto.getQuestion())

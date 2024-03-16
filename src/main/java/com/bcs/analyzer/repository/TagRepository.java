@@ -12,4 +12,7 @@ import java.util.List;
 public interface TagRepository extends JpaRepository<Tag, Integer> {
     @Query("SELECT t FROM Tag t WHERE t.id IN :ids")
     List<Tag> findAllByIds(@Param("ids") List<Integer> ids);
+
+    @Query("SELECT t FROM Tag t WHERE t.word IN :words")
+    List<Tag> findAllByWords(@Param("words") List<String> words);
 }

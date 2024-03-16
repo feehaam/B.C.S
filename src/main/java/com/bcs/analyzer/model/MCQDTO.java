@@ -15,5 +15,8 @@ public class MCQDTO {
     private Integer answer;
     private String subject;
     private Integer year;
-    private List<Integer> tagIds;
+    private List<String> tagWords;
+    public void setTagWords(List<String> words){
+        words.forEach(word -> tagWords.add(word.toLowerCase()));
+    }
 }
