@@ -12,9 +12,9 @@ public class MCQDTO {
     private String optionB;
     private String optionC;
     private String optionD;
-    private Integer answer;
+    private int answer;
     private String subject;
-    private Integer year;
+    private int year;
     private List<String> tagWords;
     public void setTagWords(List<String> words){
         words.forEach(word -> tagWords.add(word.toLowerCase()));

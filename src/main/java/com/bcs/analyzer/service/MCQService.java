@@ -11,12 +11,11 @@ import com.bcs.analyzer.util.Cache;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service @RequiredArgsConstructor
@@ -32,8 +31,9 @@ public class MCQService extends MCQFormatter{
         return mcq.orElse(null);
     }
 
-    public List<MCQ> getByFilter(Integer pageNo, Integer pageSize, Integer year, String subject, String search, String... tags) {
+    public Map<String, Object> getByFilter(Integer pageNo, Integer pageSize, Integer year, String subject, String search, String... tags) {
         int pageNumber = pageNo != null ? pageNo - 1 : 0;
+        List<MCQ> results;
         List<String> tagsList = tags != null ?
                 tagRepository.findAllByIds(Arrays
                                 .stream(tags)
@@ -45,10 +45,20 @@ public class MCQService extends MCQFormatter{
                 : Collections.emptyList();
         boolean allFiltersNull = year == null && subject == null && search == null && tagsList.isEmpty();
         if (allFiltersNull) {
-            return mcqRepository.findAll(PageRequest.of(pageNo, pageSize)).getContent();
+            results = mcqRepository.findAll(PageRequest.of(pageNo, pageSize)).getContent();
         } else {
-            return mcqRepository.findAllByFilters(year, subject, search, tagsList.isEmpty() ? null : tagsList);
+            results = mcqRepository.findAllByFilters(year, subject, search, tagsList.isEmpty() ? null : tagsList);
         }
+        Map<String, Object> response = new HashMap<>();
+        response.put("pageNo", pageNo);
+        response.put("pageSize", pageSize);
+        response.put("year", year);
+        response.put("subject", subject);
+        response.put("search", search);
+        response.put("tags", tagsList);
+        response.put("resultsCount", results.size());
+        response.put("results", results);
+        return response;
     }
 
     public MCQ create(MCQDTO mcqdto){
@@ -69,6 +79,30 @@ public class MCQService extends MCQFormatter{
         updatePendingAnalyzer(result.getId());
         updateRecentTags(tags);
         return result;
+    }
+
+    public ResponseEntity<?> createMCQBatch(@RequestBody List<MCQDTO> mcqdtoList) {
+        List<MCQ> mcqList = new ArrayList<>();
+        for(MCQDTO mcqdto: mcqdtoList){
+            MCQ mcq = MCQ.builder()
+                    .question(mcqdto.getQuestion())
+                    .optionA(mcqdto.getOptionA())
+                    .optionB(mcqdto.getOptionB())
+                    .optionC(mcqdto.getOptionC())
+                    .optionD(mcqdto.getOptionD())
+                    .answer(mcqdto.getAnswer())
+                    .year(mcqdto.getYear())
+                    .similarity(0)
+                    .build();
+            mcqList.add(mcq);
+        }
+        List<MCQ> results = mcqRepository.saveAll(mcqList);
+
+        List<Integer> idList = new ArrayList<>();
+        results.forEach(mcq -> idList.add(mcq.getId()));
+        updatePendingAnalyzerBatch(idList);
+
+        return ResponseEntity.ok(results);
     }
 
     public MCQ update(Integer id, MCQDTO mcqdto){
@@ -104,5 +138,11 @@ public class MCQService extends MCQFormatter{
 
     private void updatePendingAnalyzer(Integer targetId) {
         paRepository.save(new PendingAnalyzer(0, targetId, ANALYZER_OPERATION_TYPE));
+    }
+
+    private void updatePendingAnalyzerBatch(List<Integer> targetIds) {
+        List<PendingAnalyzer> pendingAnalyzers = new ArrayList<>();
+        targetIds.forEach(tid -> pendingAnalyzers.add(new PendingAnalyzer(0, tid, ANALYZER_OPERATION_TYPE)));
+        paRepository.saveAll(pendingAnalyzers);
     }
 }

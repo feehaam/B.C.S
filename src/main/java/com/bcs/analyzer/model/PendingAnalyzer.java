@@ -9,6 +9,6 @@ public class PendingAnalyzer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer targetId;
-    private Integer targetType;
+    private int targetId;
+    private int targetType;
 }

@@ -22,10 +22,10 @@ public class MCQ {
     private String optionC;
     @Column(columnDefinition = "TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
     private String optionD;
-    private Integer answer;
+    private int answer;
     private String subject;
-    private Integer year;
-    private Integer similarity;
+    private int year;
+    private int similarity;
     @ManyToMany
     private List<Tag> tags;
 }

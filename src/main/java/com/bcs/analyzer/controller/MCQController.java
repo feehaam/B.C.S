@@ -8,7 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/questions")
@@ -27,21 +30,25 @@ public class MCQController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MCQ>> getByFilter(
-            @RequestParam(required = true, name = "pageNo") Integer pageNo,
-            @RequestParam(required = true, name = "pageSize") Integer pageSize,
+    public ResponseEntity<?> getByFilter(
+            @RequestParam(required = false, name = "pageNo") Integer pageNo,
+            @RequestParam(required = false, name = "pageSize") Integer pageSize,
             @RequestParam(required = false, name = "year") Integer year,
             @RequestParam(required = false, name = "subject") String subject,
             @RequestParam(required = false, name = "search") String search,
             @RequestParam(required = false, name = "tags") String[] tags) {
-        List<MCQ> mcqs = mcqService.getByFilter(pageNo, pageSize, year, subject, search, tags);
-        return ResponseEntity.ok(mcqs);
+        return ResponseEntity.ok(mcqService.getByFilter(pageNo, pageSize, year, subject, search, tags));
     }
 
     @PostMapping
     public ResponseEntity<MCQ> createMCQ(@RequestBody MCQDTO mcqdto) {
         MCQ mcq = mcqService.create(mcqdto);
         return ResponseEntity.status(HttpStatus.CREATED).body(mcq);
+    }
+
+    @PostMapping("/batch")
+    public ResponseEntity<?> createMCQBatch(@RequestBody List<MCQDTO> mcqdtoList) {
+        return ResponseEntity.ok(mcqService.createMCQBatch(mcqdtoList));
     }
 
     @PutMapping("/{id}")

@@ -1,5 +1,5 @@
 package com.bcs.analyzer.service;
 
-public class SimilarityAnalyzer {
+public class RelatedAnalyzer {
 }
 
