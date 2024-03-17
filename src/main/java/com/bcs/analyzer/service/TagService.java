@@ -7,9 +7,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service @RequiredArgsConstructor
 public class TagService extends TagSuggestion{
@@ -41,14 +39,18 @@ public class TagService extends TagSuggestion{
         List<Tag> existingTags = tagRepository.findAllByWords(tagWords);
         List<Tag> newTags = new ArrayList<>();
         tagWords.forEach(word -> {
-            existingTags.forEach(et -> {
-                if(!(et.getWord().equals(word.toLowerCase()))){
-                    newTags.add(new Tag(0, word.toLowerCase(), new ArrayList<>()));
+            boolean doesNotExist = true;
+            for(Tag et: existingTags){
+                if(et.getWord().equals(word.toLowerCase())){
+                    doesNotExist = false;
+                    break;
                 }
-            });
+            }
+            if(doesNotExist) newTags.add(new Tag(0, word, new ArrayList<>()));
         });
         tagRepository.saveAll(newTags);
-        return tagRepository.findAllByWords(tagWords);
+        Set<Tag> tagsSet = new HashSet<>(tagRepository.findAllByWords(tagWords));
+        return new ArrayList<>(tagsSet);
     }
 
     public Tag update(Integer id, String word){

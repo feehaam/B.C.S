@@ -23,6 +23,8 @@ public class MCQ {
     @Column(columnDefinition = "TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
     private String optionD;
     private int answer;
+    @Column(columnDefinition = "TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
+    private String explanation;
     private String subject;
     private int year;
     private int similarity;
