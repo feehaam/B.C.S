@@ -37,6 +37,20 @@ public class TagService extends TagSuggestion{
         return result;
     }
 
+    public List<Tag> createBatch(List<String> tagWords) {
+        List<Tag> existingTags = tagRepository.findAllByWords(tagWords);
+        List<Tag> newTags = new ArrayList<>();
+        tagWords.forEach(word -> {
+            existingTags.forEach(et -> {
+                if(!(et.getWord().equals(word.toLowerCase()))){
+                    newTags.add(new Tag(0, word.toLowerCase(), new ArrayList<>()));
+                }
+            });
+        });
+        tagRepository.saveAll(newTags);
+        return tagRepository.findAllByWords(tagWords);
+    }
+
     public Tag update(Integer id, String word){
         Optional<Tag> tagOp = tagRepository.findById(id);
         if(tagOp.isEmpty()) return null;

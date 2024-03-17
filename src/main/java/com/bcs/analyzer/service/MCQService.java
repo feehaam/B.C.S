@@ -10,13 +10,11 @@ import com.bcs.analyzer.repository.TagRepository;
 import com.bcs.analyzer.util.Cache;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service @RequiredArgsConstructor
 public class MCQService extends MCQFormatter{
@@ -25,6 +23,8 @@ public class MCQService extends MCQFormatter{
     private final MCQRepository mcqRepository;
     private final TagRepository tagRepository;
     private final PARepository paRepository;
+    private final BanService banService;
+    private final TagService tagService;
 
     public MCQ getMCQById(Integer id){
         Optional<MCQ> mcq = mcqRepository.findById(id);
@@ -109,7 +109,8 @@ public class MCQService extends MCQFormatter{
         Optional<MCQ> mcqOp = mcqRepository.findById(id);
         if(mcqOp.isEmpty()) return null;
         MCQ mcq = mcqOp.get();
-        List<Tag> tags = tagRepository.findAllByWords(mcqdto.getTagWords());
+        List<Tag> tags = tagService.createBatch(mcqdto.getTagWords());
+        banService.createBatch(mcqdto.getBans());
         MCQ mcqUpdated = MCQ.builder()
                 .id(id)
                 .question(mcqdto.getQuestion())

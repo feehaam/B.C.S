@@ -7,9 +7,12 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.bcs.analyzer.util.Cache.allBans;
 
 @Service @RequiredArgsConstructor
 public class BanService {
@@ -35,6 +38,18 @@ public class BanService {
         Ban result = banRepository.save(new Ban(0, word));
         reloadBan();
         return result;
+    }
+
+    public List<Ban> createBatch(List<String> bans){
+        List<Ban> newBans = new ArrayList<>();
+        bans.forEach(word -> {
+            if (!allBans.contains(word.toLowerCase())){
+                newBans.add(new Ban(0, word.toLowerCase()));
+            }
+        });
+        List<Ban> results = banRepository.saveAll(newBans);
+        allBans.addAll(bans);
+        return results;
     }
 
     public Ban update(Integer id, String word){
