@@ -37,4 +37,10 @@ public interface MCQRepository extends JpaRepository<MCQ, Integer> {
             @Param("subject") String subject,
             @Param("search") String search,
             @Param("tags") List<String> tags);
+
+    @Query("SELECT m.subject, t " +
+            "FROM MCQ m " +
+            "LEFT JOIN m.tags t " +
+            "WHERE m.subject IS NOT NULL AND t IS NOT NULL")
+    List<Object[]> findAllWithSubjectAndTags();
 }

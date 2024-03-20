@@ -44,8 +44,10 @@ public class Cache {
         });
     }
 
-    public static void setAllSubjectBasedTags(String subject, List<Tag> tags){
-
+    public static void setAllSubjectBasedTags(String subject, Tag tag){
+        List<Tag> tagList = new ArrayList<>();
+        tagList.add(tag);
+        addSubjectBasedTag(subject, tagList);
     }
 
     public static void addSubjectBasedTag(String subject, List<Tag> tags){
