@@ -154,6 +154,12 @@ public class MCQService extends MCQFormatter{
     }
 
     private void setSubjectBasedTags() {
-        Cache.setAllSubjectBasedTags("SUBJECT", new ArrayList<>());
+        List<Object[]> allMCQ = mcqRepository.findAllWithSubjectAndTags();
+        for(Object object[]: allMCQ){
+            String subject = (String) object[0];
+            Tag tag = (Tag) object[1];
+            Cache.setAllSubjectBasedTags(subject, tag);
+        }
+        int x = 10;
     }
 }
