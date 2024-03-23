@@ -1,13 +1,11 @@
-package com.bcs.analyzer.controller;
+package com.bcs.analyzer.controller.v2;
 
 import com.bcs.analyzer.model.MCQ;
 import com.bcs.analyzer.model.UnifiedDTO;
-import com.bcs.analyzer.service.UnifiedService;
+import com.bcs.analyzer.service.v2.UnifiedService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/unified")
@@ -15,11 +13,6 @@ import java.util.List;
 public class UnifiedController {
 
     private final UnifiedService unifiedService;
-
-    @PostMapping
-    public ResponseEntity<?> createMCQBatch(@RequestBody List<UnifiedDTO> mcqdtoList) {
-        return ResponseEntity.ok(unifiedService.createBatchMCQ(mcqdtoList));
-    }
 
     @GetMapping
     public ResponseEntity<?> getByFilter(

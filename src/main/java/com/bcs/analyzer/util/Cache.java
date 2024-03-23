@@ -1,27 +1,31 @@
 package com.bcs.analyzer.util;
 
+import com.bcs.analyzer.model.Ban;
 import com.bcs.analyzer.model.Tag;
 
 import java.util.*;
 
 public class Cache {
-    public static Set<String> allBans = new HashSet<>();
     public static Set<Tag> allTags = new HashSet<>();
     public static Set<String> allTagsString = new HashSet<>();
+    public static Set<Ban> allBans = new HashSet<>();
+    public static Set<String> allBansAsString = new HashSet<>();
     public static ArrayList<Tag> recentTags = new ArrayList<>();
-    public static Map<String, Map<Tag, Integer>> subjectTopTags = new HashMap<>();
+    public static Map<String, Map<String, Integer>> subjectTopTags = new HashMap<>();
 
-    public static void setAllBans(List<String> bans){
-        allBans = new HashSet<>();
+    public static void initAllBans(List<Ban> bans){
         allBans.addAll(bans);
+        allBansAsString.addAll(bans.stream().map(Ban::getWord).toList());
     }
 
     public static void setAllTags(List<Tag> tags){
-        allTags = new HashSet<>();
         allTags.addAll(tags);
-        tags.forEach(tag -> {
-            allTagsString.add(tag.getWord());
-        });
+        allTagsString.addAll(tags.stream().map(Tag::getWord).toList());
+    }
+
+    public static List<Tag> getAllTagsByWords(List<String> words){
+        Set<String> searched = new HashSet<>(words);
+        return new ArrayList<>(allTags.stream().filter(tag -> searched.contains(tag.getWord())).toList());
     }
 
     public static void setRecentTags(List<Tag> tags){
@@ -53,7 +57,7 @@ public class Cache {
     public static void addSubjectBasedTag(String subject, List<Tag> tags){
         subject = subject.toLowerCase();
         if(!subjectTopTags.containsKey(subject)) subjectTopTags.put(subject, new HashMap<>());
-        Map<Tag, Integer> subTags = subjectTopTags.get(subject);
-        tags.forEach(tag -> subTags.put(tag, subTags.getOrDefault(tag, 0) + 1));
+        Map<String, Integer> subTags = subjectTopTags.get(subject);
+        tags.forEach(tag -> subTags.put(tag.getWord(), subTags.getOrDefault(tag.getWord(), 0) + 1));
     }
 }

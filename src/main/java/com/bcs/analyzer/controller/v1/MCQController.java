@@ -1,17 +1,14 @@
-package com.bcs.analyzer.controller;
+package com.bcs.analyzer.controller.v1;
 
 import com.bcs.analyzer.model.MCQ;
 import com.bcs.analyzer.model.MCQDTO;
-import com.bcs.analyzer.service.MCQService;
+import com.bcs.analyzer.service.v1.MCQService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/questions")

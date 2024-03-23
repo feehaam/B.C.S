@@ -1,4 +1,4 @@
-package com.bcs.analyzer.service;
+package com.bcs.analyzer.service.v1;
 
 import com.bcs.analyzer.model.MCQ;
 import com.bcs.analyzer.model.MCQDTO;

@@ -1,4 +1,4 @@
-package com.bcs.analyzer.service;
+package com.bcs.analyzer.service.v1;
 
 import com.bcs.analyzer.model.Tag;
 import com.bcs.analyzer.repository.TagRepository;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service @RequiredArgsConstructor
-public class TagService extends TagSuggestion{
+public class TagService {
 
     private final TagRepository tagRepository;
 

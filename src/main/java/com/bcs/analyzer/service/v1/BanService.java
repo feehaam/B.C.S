@@ -1,4 +1,4 @@
-package com.bcs.analyzer.service;
+package com.bcs.analyzer.service.v1;
 
 import com.bcs.analyzer.model.Ban;
 import com.bcs.analyzer.repository.BanRepository;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.bcs.analyzer.util.Cache.allBans;
+import static com.bcs.analyzer.util.Cache.allBansAsString;
 
 @Service @RequiredArgsConstructor
 public class BanService {
@@ -43,12 +43,12 @@ public class BanService {
     public List<Ban> createBatch(List<String> bans){
         List<Ban> newBans = new ArrayList<>();
         bans.forEach(word -> {
-            if (!allBans.contains(word.toLowerCase())){
+            if (!allBansAsString.contains(word.toLowerCase())){
                 newBans.add(new Ban(0, word.toLowerCase()));
             }
         });
         List<Ban> results = banRepository.saveAll(newBans);
-        allBans.addAll(bans);
+        allBansAsString.addAll(bans);
         return results;
     }
 
@@ -68,10 +68,6 @@ public class BanService {
     }
 
     private void reloadBan(){
-        Cache.setAllBans(banRepository
-                .findAll()
-                .stream()
-                .map(Ban::getWord)
-                .collect(Collectors.toList()));
+        Cache.initAllBans(banRepository.findAll());
     }
 }

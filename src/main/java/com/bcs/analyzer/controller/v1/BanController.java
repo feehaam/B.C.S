@@ -1,7 +1,7 @@
-package com.bcs.analyzer.controller;
+package com.bcs.analyzer.controller.v1;
 
 import com.bcs.analyzer.model.Ban;
-import com.bcs.analyzer.service.BanService;
+import com.bcs.analyzer.service.v1.BanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

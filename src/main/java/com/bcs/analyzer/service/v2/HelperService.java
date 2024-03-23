@@ -1,4 +1,4 @@
-package com.bcs.analyzer.service;
+package com.bcs.analyzer.service.v2;
 
 import com.bcs.analyzer.model.PendingAnalyzer;
 import com.bcs.analyzer.model.Tag;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service @RequiredArgsConstructor
-public class UnifiedServiceHelper {
+public class HelperService {
     private static final Integer ANALYZER_OPERATION_TYPE = 1;
 
     private final PARepository paRepository;
