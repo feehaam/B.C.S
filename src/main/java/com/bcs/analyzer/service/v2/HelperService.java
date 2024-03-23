@@ -5,6 +5,8 @@ import com.bcs.analyzer.model.Tag;
 import com.bcs.analyzer.repository.PARepository;
 import com.bcs.analyzer.util.Cache;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,5 +31,15 @@ public class HelperService {
     protected void updateTags(String subject, List<Tag> tags){
         Cache.setRecentTags(tags);
         Cache.addSubjectBasedTag(subject, tags);
+    }
+
+    protected void removePendingAnalyzer(int targetId) {
+        PendingAnalyzer pendingAnalyzer = paRepository.findByTargetIdAndTargetType(targetId, ANALYZER_OPERATION_TYPE);
+        if(pendingAnalyzer != null)
+            paRepository.delete(pendingAnalyzer);
+    }
+
+    public Page<PendingAnalyzer> getPendingMCQToAnalyze() {
+        return paRepository.findByTargetType(ANALYZER_OPERATION_TYPE, Pageable.ofSize(10));
     }
 }

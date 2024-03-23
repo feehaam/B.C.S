@@ -28,8 +28,11 @@ public class UnifiedService extends HelperService {
         this.bpService = bpService;
     }
 
-    public Map<String, Object> getByFilter(Integer pageNo, Integer pageSize, Integer year,
+    public Object getByFilter(Integer mcqId, Integer pageNo, Integer pageSize, Integer year,
                                            String subject, String search, String... tags) {
+        if(mcqId != null){
+            return mcqRepository.findById(mcqId);
+        }
         List<MCQ> results;
         int pageNumber = pageNo != null ? pageNo - 1 : 0;
         List<String> tagsList = tags != null ?
@@ -75,6 +78,7 @@ public class UnifiedService extends HelperService {
         addSubjectBasedTag(mcq.getSubject(), tags);
         mcq.setTags(tags);
         MCQ result = mcqRepository.save(mcq);
+        removePendingAnalyzer(result.getId());
         return mcq;
     }
 }

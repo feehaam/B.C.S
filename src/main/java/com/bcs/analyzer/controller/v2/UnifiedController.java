@@ -16,13 +16,14 @@ public class UnifiedController {
 
     @GetMapping
     public ResponseEntity<?> getByFilter(
+            @RequestParam(required = false, name = "mcqId") Integer mcqId,
             @RequestParam(required = false, name = "pageNo") Integer pageNo,
             @RequestParam(required = false, name = "pageSize") Integer pageSize,
             @RequestParam(required = false, name = "year") Integer year,
             @RequestParam(required = false, name = "subject") String subject,
             @RequestParam(required = false, name = "search") String search,
             @RequestParam(required = false, name = "tags") String[] tags) {
-        return ResponseEntity.ok(unifiedService.getByFilter(pageNo, pageSize, year, subject, search, tags));
+        return ResponseEntity.ok(unifiedService.getByFilter(mcqId, pageNo, pageSize, year, subject, search, tags));
     }
 
     @PutMapping("/{id}")
