@@ -47,6 +47,8 @@ import SignUp from "layouts/authentication/sign-up";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
+import Home from "layouts/home";
+import Questions from "layouts/questions";
 
 const routes = [
   {
@@ -56,6 +58,22 @@ const routes = [
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
     component: <Dashboard />,
+  },
+  {
+    type: "collapse",
+    name: "Home",
+    key: "home",
+    icon: <Icon fontSize="small">home</Icon>,
+    route: "/home",
+    component: <Home />,
+  },
+  {
+    type: "collapse",
+    name: "All Questions",
+    key: "questions",
+    icon: <Icon fontSize="small">pin</Icon>,
+    route: "/questions",
+    component: <Questions />,
   },
   {
     type: "collapse",

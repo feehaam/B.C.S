@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import { useState, useEffect } from "react";
 
 // react-router components
@@ -130,56 +115,51 @@ function DashboardNavbar({ absolute, light, isMini }) {
       sx={(theme) => navbar(theme, { transparentNavbar, absolute, light, darkMode })}
     >
       <Toolbar sx={(theme) => navbarContainer(theme)}>
-        <MDBox color="inherit" mb={{ xs: 1, md: 0 }} sx={(theme) => navbarRow(theme, { isMini })}>
-          <Breadcrumbs icon="home" title={route[route.length - 1]} route={route} light={light} />
-        </MDBox>
-        {isMini ? null : (
-          <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
-            <MDBox pr={1}>
-              <MDInput label="Search here" />
-            </MDBox>
-            <MDBox color={light ? "white" : "inherit"}>
-              <Link to="/authentication/sign-in/basic">
-                <IconButton sx={navbarIconButton} size="small" disableRipple>
-                  <Icon sx={iconsStyle}>account_circle</Icon>
-                </IconButton>
-              </Link>
-              <IconButton
-                size="small"
-                disableRipple
+        <table style={{ width: "100%", borderBottom: "1px solid #ddd" }}>
+          <tr>
+            <td>
+              <MDBox
                 color="inherit"
-                sx={navbarMobileMenu}
-                onClick={handleMiniSidenav}
+                mb={{ xs: 1, md: 0 }}
+                sx={(theme) => navbarRow(theme, { isMini })}
               >
-                <Icon sx={iconsStyle} fontSize="medium">
-                  {miniSidenav ? "menu_open" : "menu"}
-                </Icon>
-              </IconButton>
-              <IconButton
-                size="small"
-                disableRipple
-                color="inherit"
-                sx={navbarIconButton}
-                onClick={handleConfiguratorOpen}
-              >
-                <Icon sx={iconsStyle}>settings</Icon>
-              </IconButton>
-              <IconButton
-                size="small"
-                disableRipple
-                color="inherit"
-                sx={navbarIconButton}
-                aria-controls="notification-menu"
-                aria-haspopup="true"
-                variant="contained"
-                onClick={handleOpenMenu}
-              >
-                <Icon sx={iconsStyle}>notifications</Icon>
-              </IconButton>
-              {renderMenu()}
-            </MDBox>
-          </MDBox>
-        )}
+                <Breadcrumbs
+                  icon="home"
+                  title={route[route.length - 1]}
+                  route={route}
+                  light={light}
+                />
+              </MDBox>
+            </td>
+            <td
+              style={{
+                textAlign: "right",
+                float: "right",
+                textDecoration: "bold",
+              }}
+            >
+              {isMini ? null : (
+                <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
+                  <MDBox color={light ? "white" : "inherit"}>
+                    <IconButton
+                      size="small"
+                      disableRipple
+                      color="inherit"
+                      sx={navbarMobileMenu}
+                      onClick={handleMiniSidenav}
+                    >
+                      <Icon sx={iconsStyle} fontSize="medium">
+                        {miniSidenav ? "menu_open" : "menu"}
+                      </Icon>
+                    </IconButton>
+
+                    {renderMenu()}
+                  </MDBox>
+                </MDBox>
+              )}
+            </td>
+          </tr>
+        </table>
       </Toolbar>
     </AppBar>
   );
