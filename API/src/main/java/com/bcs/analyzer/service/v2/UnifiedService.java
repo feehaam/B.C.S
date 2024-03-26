@@ -9,6 +9,7 @@ import com.bcs.analyzer.repository.TagRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.bcs.analyzer.util.Cache.*;
@@ -19,6 +20,7 @@ public class UnifiedService extends HelperService {
     private final MCQRepository mcqRepository;
     private final TagRepository tagRepository;
     private final BatchProcessingService bpService;
+    private final List<String> sortBy = List.of("Similarity Index", "Year", "Update Time", "Alphabetically");
 
     public UnifiedService(MCQRepository mcqRepository, PARepository paRepository,
                           TagRepository tagRepository, BatchProcessingService bpService) {
@@ -29,7 +31,7 @@ public class UnifiedService extends HelperService {
     }
 
     public Object getByFilter(Integer mcqId, Integer pageNo, Integer pageSize, Integer year,
-                                           String subject, String search, String... tags) {
+                                           String subject, String search, String sortBy, String... tags) {
         if(mcqId != null){
             return mcqRepository.findById(mcqId);
         }
@@ -63,9 +65,46 @@ public class UnifiedService extends HelperService {
         response.put("subject", subject);
         response.put("search", search);
         response.put("tags", tagsList);
+        response.put("sortBy", sortBy);
         response.put("resultsCount", results.size());
-        response.put("results", results);
+        response.put("results", sort(sortBy, results));
         return response;
+    }
+
+    private List<MCQ> sort(String sortBy, List<MCQ> results){
+        if (sortBy == null) {
+            return results;
+        }
+        else if (sortBy.equals(this.sortBy.get(0))){
+            results.sort(Comparator.comparing(MCQ::getSimilarity).reversed());
+        }
+        else if (sortBy.equals(this.sortBy.get(1))){
+            results.sort(Comparator.comparing(MCQ::getYear).reversed());
+        }
+        else if (sortBy.equals(this.sortBy.get(2))){
+            results.sort(Comparator.comparing(MCQ::getUpdateTime).reversed());
+        }
+        else if (sortBy.equals(this.sortBy.get(3))){
+            results.sort(Comparator.comparing(MCQ::getQuestion));
+        }
+        return results;
+    }
+
+    public Map<String, Object> getFilters(){
+        Map<String, Object> filter = new HashMap<>();
+        filter.put("tags", getSorted(allTagsString));
+        filter.put("subjects", getSorted(subjectTopTags.keySet()));
+        List<Integer> years = new ArrayList<>();
+        for(int i=45; i>=10; i--) years.add(i);
+        filter.put("years", years);
+        filter.put("sortBy", sortBy);
+        return filter;
+    }
+
+    private String [] getSorted(Collection<String> collection){
+        String [] elements = collection.toArray(new String[0]);
+        Arrays.sort(elements);
+        return elements;
     }
 
     public MCQ setBanAndTags(Integer id, UnifiedDTO mcqdto){
@@ -77,6 +116,7 @@ public class UnifiedService extends HelperService {
         setRecentTags(tags);
         addSubjectBasedTag(mcq.getSubject(), tags);
         mcq.setTags(tags);
+        mcq.setUpdateTime(LocalDateTime.now());
         MCQ result = mcqRepository.save(mcq);
         removePendingAnalyzer(result.getId());
         return mcq;

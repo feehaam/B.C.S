@@ -5,6 +5,8 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
 @Entity
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor @Builder
@@ -30,4 +32,5 @@ public class MCQ {
     private int similarity;
     @ManyToMany
     private List<Tag> tags;
+    private LocalDateTime updateTime;
 }

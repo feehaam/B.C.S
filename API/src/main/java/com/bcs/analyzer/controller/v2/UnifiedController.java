@@ -22,8 +22,14 @@ public class UnifiedController {
             @RequestParam(required = false, name = "year") Integer year,
             @RequestParam(required = false, name = "subject") String subject,
             @RequestParam(required = false, name = "search") String search,
+            @RequestParam(required = false, name = "sortBy") String sortBy,
             @RequestParam(required = false, name = "tags") String[] tags) {
-        return ResponseEntity.ok(unifiedService.getByFilter(mcqId, pageNo, pageSize, year, subject, search, tags));
+        return ResponseEntity.ok(unifiedService.getByFilter(mcqId, pageNo, pageSize, year, subject, search, sortBy, tags));
+    }
+
+    @GetMapping("/filters")
+    public ResponseEntity<?> getFilters(){
+        return ResponseEntity.ok(unifiedService.getFilters());
     }
 
     @PutMapping("/{id}")

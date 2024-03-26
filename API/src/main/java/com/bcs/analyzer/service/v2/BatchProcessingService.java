@@ -10,6 +10,7 @@ import com.bcs.analyzer.repository.PARepository;
 import com.bcs.analyzer.repository.TagRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.bcs.analyzer.util.Cache.*;
@@ -36,6 +37,7 @@ public class BatchProcessingService extends HelperService {
                     .optionA(unifiedDTO.getOptionA()).optionB(unifiedDTO.getOptionB())
                     .optionC(unifiedDTO.getOptionC()).optionD(unifiedDTO.getOptionD())
                     .answer(unifiedDTO.getAnswer()).year(unifiedDTO.getYear()).explanation(unifiedDTO.getExplanation())
+                    .updateTime(LocalDateTime.now())
                     .subject(unifiedDTO.getSubject()).similarity(0).build();
             mcqList.add(mcq);
         }
