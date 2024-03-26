@@ -42,6 +42,7 @@ const Exp = ({ mcq }) => {
                     border: "1px solid #ddd",
                     padding: "2px",
                     borderRadius: "4px",
+                    cursor: "pointer",
                   }}
                   onClick={() => setShowFullExplanation(!showFullExplanation)}
                 >
@@ -112,7 +113,7 @@ const Exp = ({ mcq }) => {
             variant="outlined"
           >
             <MDTypography variant="text" fontWeight="small">
-              {tag}
+              {tag.word}
             </MDTypography>
           </Button>
         ))}

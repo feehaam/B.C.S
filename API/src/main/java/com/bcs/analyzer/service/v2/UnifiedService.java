@@ -37,15 +37,7 @@ public class UnifiedService extends HelperService {
         }
         List<MCQ> results;
         int pageNumber = pageNo != null ? pageNo - 1 : 0;
-        List<String> tagsList = tags != null ?
-                tagRepository.findAllByIds(Arrays
-                                .stream(tags)
-                                .map(Integer::parseInt)
-                                .toList())
-                        .stream()
-                        .map(Tag::getWord)
-                        .toList()
-                : Collections.emptyList();
+        List<String> tagsList = tags == null ? new ArrayList<>() : Arrays.stream(tags).toList();
         boolean allFiltersNull = year == null && subject == null && search == null && tagsList.isEmpty();
         boolean allParamsNull = allFiltersNull && pageNo == null && pageSize == null;
 
