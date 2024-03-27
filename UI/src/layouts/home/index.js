@@ -18,8 +18,14 @@ function Home() {
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6} lg={3}>
+        <Grid
+          container
+          spacing={3}
+          alignItems="center"
+          justifyContent="center"
+          flexDirection="column"
+        >
+          <Grid item xs={12} md={6} lg={3} style={{ width: "650px", maxWidth: "99%" }}>
             <Link to={"/questions"}>
               <MDBox mb={1.5}>
                 <ComplexStatisticsCard
@@ -36,7 +42,7 @@ function Home() {
               </MDBox>
             </Link>
           </Grid>
-          <Grid item xs={12} md={6} lg={3}>
+          <Grid item xs={12} md={6} lg={3} style={{ width: "650px", maxWidth: "99%" }}>
             <Link to={"/home"}>
               <MDBox mb={1.5}>
                 <ComplexStatisticsCard
@@ -52,7 +58,7 @@ function Home() {
               </MDBox>
             </Link>
           </Grid>
-          <Grid item xs={12} md={6} lg={3}>
+          <Grid item xs={12} md={6} lg={3} style={{ width: "650px", maxWidth: "99%" }}>
             <Link to={"/home"}>
               <MDBox mb={1.5}>
                 <ComplexStatisticsCard
@@ -69,7 +75,7 @@ function Home() {
               </MDBox>
             </Link>
           </Grid>
-          <Grid item xs={12} md={6} lg={3}>
+          <Grid item xs={12} md={6} lg={3} style={{ width: "650px", maxWidth: "99%" }}>
             <Link to={"/home"}>
               <MDBox mb={1.5}>
                 <ComplexStatisticsCard

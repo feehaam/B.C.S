@@ -19,6 +19,7 @@ import Exp from "./components/Exp";
 import Filters from "./components/Filters";
 import Tag from "./components/Tag";
 import MDButton from "components/MDButton";
+import Loader from "layouts/loader/Loader";
 
 function Questions() {
   const [questions, setQuestions] = useState([]);
@@ -27,6 +28,7 @@ function Questions() {
   const [searchValue, setSearchValue] = useState("");
 
   const fetchData = async (url) => {
+    setQuestions([]);
     AxiosInstance.get(url)
       .then((response) => {
         console.log(response);
@@ -179,7 +181,7 @@ function Questions() {
                         variant="contained"
                         size="small"
                         style={{ marginTop: "3px" }}
-                        color={"dark"}
+                        color={"primary"}
                       >
                         Reset
                       </MDButton>
@@ -193,7 +195,7 @@ function Questions() {
                         variant="contained"
                         size="small"
                         style={{ marginTop: "3px" }}
-                        color={"dark"}
+                        color={"info"}
                       >
                         Apply
                       </MDButton>
@@ -202,7 +204,13 @@ function Questions() {
                 </Card>
                 <Card style={{ marginBottom: "10px" }}>
                   <MDTypography px={2} variant="h6" fontWeight="medium">
-                    Total MCQ: {questions.length}
+                    {questions.length > 0 ? (
+                      <div style={{ margin: "10px" }}>Showing MCQ in total: {questions.length}</div>
+                    ) : (
+                      <>
+                        <Loader />
+                      </>
+                    )}
                   </MDTypography>
                 </Card>
                 {questions.map((q) => (
