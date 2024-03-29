@@ -15,6 +15,7 @@ function Footer() {
   return (
     <MDBox
       width="100%"
+      mt={8}
       display="flex"
       flexDirection={{ xs: "column", lg: "row" }}
       justifyContent="space-between"

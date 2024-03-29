@@ -20,20 +20,33 @@ public class TagSuggestion {
 
     private final MCQRepository mcqRepository;
 
-    public Map<String, List<Tag>> getSuggestedTags(int mcqId){
+    public Map<String, Object> getSuggestedTagsAndBans(int mcqId){
         Optional<MCQ> mcqOp = mcqRepository.findById(mcqId);
         if(mcqOp.isEmpty()) return null;
         MCQ mcq = mcqOp.get();
 
         // Get all kind of suggestions and prepare suggestions list
-        Map<String, List<Tag>> suggestions = new HashMap<>();
-        addTagsToResult(addTagsThatMatchTheSample(getWordsFromString(mcq.getQuestion() + " " + mcq.getExplanation())), "matched", suggestions);
-        addTagsToResult(getRecentlyUsedTags(), "recent", suggestions);
-        addTagsToResult(getAllTagsByWords(addTagsBasedOnSubject(mcq.getSubject().toLowerCase())), "subject", suggestions);
-        addTagsToResult(addTagsThatDoesNotMatchTheSample(getWordsFromString(mcq.getQuestion() + " " + mcq.getExplanation())), "new", suggestions);
-        addTagsToResult(lowPrioritySuggestions(suggestions), "more", suggestions);
-        // The final suggestions list
-        return suggestions;
+        Map<String, List<Tag>> tags = new HashMap<>();
+        addTagsToResult(addTagsThatMatchTheSample(getWordsFromString(mcq.getQuestion() + " " + mcq.getExplanation())), "matched", tags);
+        addTagsToResult(getRecentlyUsedTags(), "recent", tags);
+        addTagsToResult(getAllTagsByWords(addTagsBasedOnSubject(mcq.getSubject().toLowerCase())), "subject", tags);
+        addTagsToResult(addTagsThatDoesNotMatchTheSample(getWordsFromString(mcq.getQuestion() + " " + mcq.getExplanation())), "new", tags);
+        addTagsToResult(lowPrioritySuggestions(tags), "more", tags);
+
+        // Prepare bans suggestions
+        Set<String> bans = new HashSet<>();
+        for(String word: getWordsFromString(mcq.getQuestion()
+                + " " + mcq.getExplanation()
+                + " " + mcq.getOptionA()
+                + " " + mcq.getOptionB()
+                + " " + mcq.getOptionC()
+                + " " + mcq.getOptionD())){
+            if(!(allBansAsString.contains(word) && allTagsString.contains(word))){
+                bans.add(word);
+            }
+        }
+
+        return Map.of("tags", getTagsAsList(tags), "bans", bans);
     }
 
     private static void addTagsToResult(List<Tag> tags, String key, Map<String, List<Tag>> suggestions){
@@ -128,6 +141,16 @@ public class TagSuggestion {
             if (limit == 0) break;
         }
         return notSuggested;
+    }
+
+    private List<Tag> getTagsAsList(Map<String, List<Tag>> tags){
+        List<Tag> tagsAsList = new ArrayList<>();
+        tagsAsList.addAll(tags.get("more"));
+        tagsAsList.addAll(tags.get("new"));
+        tagsAsList.addAll(tags.get("subject"));
+        tagsAsList.addAll(tags.get("recent"));
+        tagsAsList.addAll(tags.get("matched"));
+        return tagsAsList;
     }
 
     @AllArgsConstructor

@@ -49,13 +49,14 @@ import SignUp from "layouts/authentication/sign-up";
 import Icon from "@mui/material/Icon";
 import Home from "layouts/home";
 import Questions from "layouts/questions";
+import TagsAndBans from "layouts/tagsandbans";
 
 const routes = [
   {
     type: "collapse",
     name: "Dashboard",
     key: "dashboard",
-    icon: <Icon fontSize="small">home</Icon>,
+    icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
     component: <Home />,
   },
@@ -66,6 +67,14 @@ const routes = [
     icon: <Icon fontSize="small">home</Icon>,
     route: "/home",
     component: <Home />,
+  },
+  {
+    type: "collapse",
+    name: "Set Tags & Bans",
+    key: "set-tags-and-bans",
+    icon: <Icon fontSize="small">tag</Icon>,
+    route: "/set-tags-and-bans",
+    component: <TagsAndBans />,
   },
   {
     type: "collapse",

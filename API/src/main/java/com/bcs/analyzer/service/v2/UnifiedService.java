@@ -75,6 +75,14 @@ public class UnifiedService extends HelperService {
         }
         else if (sortBy.equals(this.sortBy.get(2))){
             results.sort(Comparator.comparing(MCQ::getUpdateTime).reversed());
+            List<MCQ> chunked = new ArrayList<>();
+            for(MCQ mcq: results){
+                if(mcq.getUpdateTime().isAfter(LocalDateTime.now().minusDays(4))){
+                    chunked.add(mcq);
+                }
+                else break;
+            }
+            results = chunked;
         }
         else if (sortBy.equals(this.sortBy.get(3))){
             results.sort(Comparator.comparing(MCQ::getQuestion));
