@@ -1,13 +1,14 @@
 package com.bcs.analyzer.model;
 
-import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity @Getter @Setter @AllArgsConstructor
+@Document
+@Getter @Setter @AllArgsConstructor
 @NoArgsConstructor @Builder
 public class PendingAnalyzer {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private int targetId;
     private int targetType;

@@ -118,184 +118,191 @@ function TagsAndBans() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      {question !== undefined && (
-        <Card key={question.id} style={{ marginBottom: "10px" }}>
-          <MDBox pt={3} px={2}>
-            <MDTypography variant="h6" fontWeight="medium">
-              {question.question}
-            </MDTypography>
-          </MDBox>
-          <MDBox pt={1} pb={1} px={2}>
-            <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
-              <Options
-                a={question.optionA}
-                b={question.optionB}
-                c={question.optionC}
-                d={question.optionD}
-                correct={question.answer}
-              />
+      <div
+        style={{
+          maxWidth: "700px",
+          margin: "auto",
+        }}
+      >
+        {question !== undefined && (
+          <Card key={question.id} style={{ marginBottom: "10px" }}>
+            <MDBox pt={3} px={2}>
+              <MDTypography variant="h6" fontWeight="medium">
+                {question.question}
+              </MDTypography>
             </MDBox>
-          </MDBox>
-          <Exp mcq={question} />
-          <div
-            style={{
-              margin: "5px",
-              padding: "5px",
-              borderRadius: "5px",
-              backgroundColor: "#aa0000",
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            SELECT BANS
-          </div>
-          {selBans !== undefined && selBans.length !== 0 && (
+            <MDBox pt={1} pb={1} px={2}>
+              <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
+                <Options
+                  a={question.optionA}
+                  b={question.optionB}
+                  c={question.optionC}
+                  d={question.optionD}
+                  correct={question.answer}
+                />
+              </MDBox>
+            </MDBox>
+            <Exp mcq={question} />
             <div
-              display="flex"
-              flexDirection="column"
               style={{
-                border: "1px solid #aa0000",
-                borderRadius: "10px",
-                padding: "10px",
                 margin: "5px",
-              }}
-            >
-              {selBans.map((item, index) => {
-                return <SelItem key={index} word={item} addTagOrBan={addTagOrBan} type={2} />;
-              })}
-            </div>
-          )}
-          {sugBans !== undefined && (
-            <div
-              display="flex"
-              flexDirection="column"
-              style={{
-                border: "1px solid #aa0000",
-                borderRadius: "10px",
-                padding: "10px",
-                margin: "5px",
-              }}
-            >
-              {sugBans.map((item, index) => {
-                return <SugItem key={index} word={item} addTagOrBan={addTagOrBan} type={2} />;
-              })}
-            </div>
-          )}
-          <div
-            style={{
-              margin: "5px",
-              padding: "5px",
-              borderRadius: "5px",
-              backgroundColor: "#0088dd",
-              color: "white",
-              fontWeight: "bold",
-            }}
-          >
-            SELECT TAGS
-          </div>
-          {selTags !== undefined && selTags.length !== 0 && (
-            <div
-              display="flex"
-              flexDirection="column"
-              style={{
-                justifyContent: "space-between",
-                border: "1px solid #0088dd",
-                borderRadius: "10px",
-                padding: "10px",
-                margin: "5px",
-              }}
-            >
-              {selTags.map((item, index) => {
-                return <SelItem key={index} word={item} addTagOrBan={addTagOrBan} type={1} />;
-              })}
-            </div>
-          )}
-          {sugTags !== undefined && (
-            <div
-              display="flex"
-              flexDirection="column"
-              style={{
-                border: "1px solid #0088dd",
-                borderRadius: "10px",
-                padding: "10px",
-                margin: "5px",
-              }}
-            >
-              {sugTags.map((item, index) => {
-                return <SugItem word={item.word} addTagOrBan={addTagOrBan} type={1} />;
-              })}
-            </div>
-          )}
-          <div style={{ display: "flex", width: "100%" }}>
-            <input
-              id="newTag"
-              style={{
-                flex: 1,
-                border: "1px solid #0088dd",
-                padding: "10px",
-                margin: "5px",
+                padding: "5px",
                 borderRadius: "5px",
-                color: "#0088dd",
+                backgroundColor: "#aa0000",
+                fontWeight: "bold",
+                color: "white",
               }}
-              placeholder="Tag don't exist in suggestion? Write a new one!"
-            />
+            >
+              SELECT BANS
+            </div>
+            {selBans !== undefined && selBans.length !== 0 && (
+              <div
+                display="flex"
+                flexDirection="column"
+                style={{
+                  border: "1px solid #aa0000",
+                  borderRadius: "10px",
+                  padding: "10px",
+                  margin: "5px",
+                }}
+              >
+                {selBans.map((item, index) => {
+                  return <SelItem key={index} word={item} addTagOrBan={addTagOrBan} type={2} />;
+                })}
+              </div>
+            )}
+            {sugBans !== undefined && (
+              <div
+                display="flex"
+                flexDirection="column"
+                style={{
+                  border: "1px solid #aa0000",
+                  borderRadius: "10px",
+                  padding: "10px",
+                  margin: "5px",
+                }}
+              >
+                {sugBans.map((item, index) => {
+                  return <SugItem key={index} word={item} addTagOrBan={addTagOrBan} type={2} />;
+                })}
+              </div>
+            )}
+            <div
+              style={{
+                margin: "5px",
+                padding: "5px",
+                borderRadius: "5px",
+                backgroundColor: "#0088dd",
+                color: "white",
+                fontWeight: "bold",
+              }}
+            >
+              SELECT TAGS
+            </div>
+            {selTags !== undefined && selTags.length !== 0 && (
+              <div
+                display="flex"
+                flexDirection="column"
+                style={{
+                  justifyContent: "space-between",
+                  border: "1px solid #0088dd",
+                  borderRadius: "10px",
+                  padding: "10px",
+                  margin: "5px",
+                }}
+              >
+                {selTags.map((item, index) => {
+                  return <SelItem key={index} word={item} addTagOrBan={addTagOrBan} type={1} />;
+                })}
+              </div>
+            )}
+            {sugTags !== undefined && (
+              <div
+                display="flex"
+                flexDirection="column"
+                style={{
+                  border: "1px solid #0088dd",
+                  borderRadius: "10px",
+                  padding: "10px",
+                  margin: "5px",
+                }}
+              >
+                {sugTags.map((item, index) => {
+                  return <SugItem word={item.word} addTagOrBan={addTagOrBan} type={1} />;
+                })}
+              </div>
+            )}
+            <div style={{ display: "flex", width: "100%" }}>
+              <input
+                id="newTag"
+                style={{
+                  flex: 1,
+                  border: "1px solid #0088dd",
+                  padding: "10px",
+                  margin: "5px",
+                  borderRadius: "5px",
+                  color: "#0088dd",
+                }}
+                placeholder="Tag don't exist in suggestion? Write a new one!"
+              />
+              <button
+                style={{
+                  backgroundColor: "#0088dd",
+                  border: "1px solid #ccc",
+                  padding: "10px",
+                  margin: "5px",
+                  borderRadius: "10px",
+                  color: "white",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                  boxShadow: "1px 1px 5px gray",
+                }}
+                onClick={(e) => {
+                  const newTagInput = document.getElementById("newTag");
+                  const val = newTagInput.value;
+                  newTagInput.value = "";
+                  if (val === null || val === undefined || strlen(val) === 0) {
+                    return;
+                  }
+                  addTagOrBan(val, 1, 1);
+                }}
+              >
+                Add new Tag
+              </button>
+            </div>
+            {loading && <Loader />}
+            {info !== undefined && strlen(info) !== 0 && (
+              <dvi
+                style={{
+                  border: "2px solid #ccc",
+                  padding: "5px",
+                  margin: "5px",
+                  borderRadius: "10px",
+                  fontWeight: "bold",
+                }}
+              >
+                {info}
+              </dvi>
+            )}
             <button
               style={{
-                backgroundColor: "#0088dd",
-                border: "1px solid #ccc",
+                backgroundColor: "#333",
+                border: "2px solid #ccc",
                 padding: "10px",
                 margin: "5px",
                 borderRadius: "10px",
                 color: "white",
                 fontWeight: "bold",
                 cursor: "pointer",
-                boxShadow: "1px 1px 5px gray",
+                boxShadow: "3px 3px 10px gray",
               }}
-              onClick={(e) => {
-                const newTagInput = document.getElementById("newTag");
-                const val = newTagInput.value;
-                newTagInput.value = "";
-                if (val === null || val === undefined || strlen(val) === 0) {
-                  return;
-                }
-                addTagOrBan(val, 1, 1);
-              }}
+              onClick={save}
             >
-              Add new Tag
+              <h3>SAVE MCQ</h3>
             </button>
-          </div>
-          {loading && <Loader />}
-          {info !== undefined && strlen(info) !== 0 && (
-            <dvi
-              style={{
-                border: "2px solid #ccc",
-                padding: "5px",
-                margin: "5px",
-                borderRadius: "10px",
-                fontWeight: "bold",
-              }}
-            >
-              {info}
-            </dvi>
-          )}
-          <button
-            style={{
-              backgroundColor: "#333",
-              border: "2px solid #ccc",
-              padding: "10px",
-              margin: "5px",
-              borderRadius: "10px",
-              color: "white",
-              fontWeight: "bold",
-              cursor: "pointer",
-              boxShadow: "3px 3px 10px gray",
-            }}
-            onClick={save}
-          >
-            <h3>SAVE MCQ</h3>
-          </button>
-        </Card>
-      )}
+          </Card>
+        )}
+      </div>
       <Footer />
     </DashboardLayout>
   );

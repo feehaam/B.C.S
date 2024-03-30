@@ -1,10 +1,8 @@
 package com.bcs.analyzer.repository;
 
 import com.bcs.analyzer.model.Ban;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-@Repository
-public interface BanRepository extends JpaRepository<Ban, Integer> {
+public interface BanRepository extends MongoRepository<Ban, Integer> {
 
 }

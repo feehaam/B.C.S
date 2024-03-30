@@ -1,15 +1,13 @@
 package com.bcs.analyzer.repository;
 
 import com.bcs.analyzer.model.MCQ;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
-public interface MCQRepository extends JpaRepository<MCQ, Integer> {
+public interface MCQRepository extends MongoRepository<MCQ, Integer> {
     @Query("SELECT m FROM MCQ m " +
             "LEFT JOIN m.tags t " +  // Left join with Tag for filtering by tags
             "WHERE (:year IS NULL OR m.year = :year) " +  // Filter by year (null check)

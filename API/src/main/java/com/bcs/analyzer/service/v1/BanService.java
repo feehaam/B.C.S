@@ -24,6 +24,11 @@ public class BanService {
         reloadBan();
     }
 
+    @PostConstruct
+    void addData(){
+        create("........");
+    }
+
     public Ban getBanById(Integer id){
         Optional<Ban> ban = banRepository.findById(id);
         return ban.orElse(null);
