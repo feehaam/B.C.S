@@ -1,12 +1,22 @@
 import MDBox from "components/MDBox";
-import { Button, Card } from "@mui/material";
+import {
+  Button,
+  Card,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import MDTypography from "components/MDTypography";
 import { useState } from "react";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import SubjectIcon from "@mui/icons-material/Subject";
 import EventIcon from "@mui/icons-material/Event";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-/* eslint-disable */
+import ResetIcon from "@mui/icons-material/Restore";
+import AxiosInstance from "scripts/axioInstance";
 
 const Exp = ({ mcq }) => {
   const isImageURL = (url) => {
@@ -14,6 +24,26 @@ const Exp = ({ mcq }) => {
   };
   const isLongExplanation = mcq.explanation.length > 100;
   const [showFullExplanation, setShowFullExplanation] = useState(false);
+
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const handleOpenConfirmDialog = () => setOpenConfirmDialog(true);
+  const handleCloseConfirmDialog = () => setOpenConfirmDialog(false);
+  const handleConfirmReset = () => {
+    removeTags();
+    handleCloseConfirmDialog();
+  };
+
+  const removeTags = () => {
+    const url = "http://localhost:8000/unified/" + mcq.id;
+    AxiosInstance.delete(url)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const renderExplanation = () => {
     if (isImageURL(mcq.explanation)) {
       return +(
@@ -117,6 +147,23 @@ const Exp = ({ mcq }) => {
             </MDTypography>
           </Button>
         ))}
+        {mcq.tags.length > 0 && (
+          <IconButton onClick={handleOpenConfirmDialog}>
+            <ResetIcon />
+          </IconButton>
+        )}
+        <Dialog open={openConfirmDialog} onClose={handleCloseConfirmDialog}>
+          <DialogTitle>
+            <Typography variant="h6">Confirm Reset</Typography>
+          </DialogTitle>
+          <DialogContent>
+            <Typography>Are you sure you want to reset the tags for this MCQ?</Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseConfirmDialog}>Cancel</Button>
+            <Button onClick={handleConfirmReset}>Confirm</Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </MDBox>
   );

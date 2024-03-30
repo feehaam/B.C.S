@@ -43,7 +43,7 @@ function Home() {
             </Link>
           </Grid>
           <Grid item xs={12} md={6} lg={3} style={{ width: "650px", maxWidth: "99%" }}>
-            <Link to={"/home"}>
+            <Link to={"/set-tags-and-bans"}>
               <MDBox mb={1.5}>
                 <ComplexStatisticsCard
                   icon="tag"

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service @RequiredArgsConstructor
 public class HelperService {
@@ -19,12 +20,12 @@ public class HelperService {
     private final PARepository paRepository;
 
     protected void updatePendingAnalyzer(Integer targetId) {
-        paRepository.save(new PendingAnalyzer(0, targetId, ANALYZER_OPERATION_TYPE));
+        paRepository.save(new PendingAnalyzer(0, targetId, ANALYZER_OPERATION_TYPE, 0));
     }
 
     protected void updatePendingAnalyzerBatch(List<Integer> targetIds) {
         List<PendingAnalyzer> pendingAnalyzers = new ArrayList<>();
-        targetIds.forEach(tid -> pendingAnalyzers.add(new PendingAnalyzer(0, tid, ANALYZER_OPERATION_TYPE)));
+        targetIds.forEach(tid -> pendingAnalyzers.add(new PendingAnalyzer(0, tid, ANALYZER_OPERATION_TYPE, 0)));
         paRepository.saveAll(pendingAnalyzers);
     }
 
@@ -34,12 +35,27 @@ public class HelperService {
     }
 
     protected void removePendingAnalyzer(int targetId) {
-        PendingAnalyzer pendingAnalyzer = paRepository.findByTargetIdAndTargetType(targetId, ANALYZER_OPERATION_TYPE);
-        if(pendingAnalyzer != null)
-            paRepository.delete(pendingAnalyzer);
+        List<PendingAnalyzer> pendingAnalyzers = paRepository
+                .findByTargetIdAndTargetType(targetId, ANALYZER_OPERATION_TYPE).stream().toList();
+        if(!pendingAnalyzers.isEmpty())
+            paRepository.deleteAll(pendingAnalyzers);
     }
 
-    public Page<PendingAnalyzer> getPendingMCQToAnalyze() {
-        return paRepository.findByTargetType(ANALYZER_OPERATION_TYPE, Pageable.ofSize(10));
+    protected void addPendingAnalyzer(int targetId) {
+        PendingAnalyzer pendingAnalyzer = PendingAnalyzer
+                .builder()
+                .id(0)
+                .targetId(targetId)
+                .targetType(ANALYZER_OPERATION_TYPE)
+                .priority(1)
+                .build();
+        paRepository.save(pendingAnalyzer);
+    }
+
+    public List<PendingAnalyzer> getPendingMCQToAnalyze() {
+        List<PendingAnalyzer> results = paRepository.findByPriority(1);
+        List<PendingAnalyzer> byTargetType = paRepository.findByTargetType(ANALYZER_OPERATION_TYPE, Pageable.ofSize(10)).stream().toList();
+        results.addAll(byTargetType);
+        return results;
     }
 }

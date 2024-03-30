@@ -5,7 +5,6 @@ import com.bcs.analyzer.model.Tag;
 import com.bcs.analyzer.model.UnifiedDTO;
 import com.bcs.analyzer.repository.MCQRepository;
 import com.bcs.analyzer.repository.PARepository;
-import com.bcs.analyzer.repository.TagRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -18,15 +17,12 @@ import static com.bcs.analyzer.util.Cache.*;
 public class UnifiedService extends HelperService {
 
     private final MCQRepository mcqRepository;
-    private final TagRepository tagRepository;
     private final BatchProcessingService bpService;
     private final List<String> sortBy = List.of("Similarity Index", "Year", "Update Time", "Alphabetically");
 
-    public UnifiedService(MCQRepository mcqRepository, PARepository paRepository,
-                          TagRepository tagRepository, BatchProcessingService bpService) {
+    public UnifiedService(MCQRepository mcqRepository, PARepository paRepository, BatchProcessingService bpService) {
         super(paRepository);
         this.mcqRepository = mcqRepository;
-        this.tagRepository = tagRepository;
         this.bpService = bpService;
     }
 
@@ -120,5 +116,14 @@ public class UnifiedService extends HelperService {
         MCQ result = mcqRepository.save(mcq);
         removePendingAnalyzer(result.getId());
         return mcq;
+    }
+
+    public MCQ removeTags(Integer id){
+        Optional<MCQ> mcqOp = mcqRepository.findById(id);
+        if(mcqOp.isEmpty()) return null;
+        MCQ mcq = mcqOp.get();
+        mcq.getTags().clear();
+        addPendingAnalyzer(mcq.getId());
+        return mcqRepository.save(mcq);
     }
 }

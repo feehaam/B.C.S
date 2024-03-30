@@ -40,4 +40,9 @@ public class UnifiedController {
         }
         return ResponseEntity.ok(updatedMCQ);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<MCQ> removeTags(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(unifiedService.removeTags(id));
+    }
 }

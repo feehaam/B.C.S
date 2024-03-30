@@ -144,12 +144,12 @@ public class MCQService extends MCQFormatter{
     }
 
     private void updatePendingAnalyzer(Integer targetId) {
-        paRepository.save(new PendingAnalyzer(0, targetId, ANALYZER_OPERATION_TYPE));
+        paRepository.save(new PendingAnalyzer(0, targetId, ANALYZER_OPERATION_TYPE, 0));
     }
 
     private void updatePendingAnalyzerBatch(List<Integer> targetIds) {
         List<PendingAnalyzer> pendingAnalyzers = new ArrayList<>();
-        targetIds.forEach(tid -> pendingAnalyzers.add(new PendingAnalyzer(0, tid, ANALYZER_OPERATION_TYPE)));
+        targetIds.forEach(tid -> pendingAnalyzers.add(new PendingAnalyzer(0, tid, ANALYZER_OPERATION_TYPE, 0)));
         paRepository.saveAll(pendingAnalyzers);
     }
 

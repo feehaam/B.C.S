@@ -11,4 +11,5 @@ public class PendingAnalyzer {
     private Integer id;
     private int targetId;
     private int targetType;
+    private int priority;
 }

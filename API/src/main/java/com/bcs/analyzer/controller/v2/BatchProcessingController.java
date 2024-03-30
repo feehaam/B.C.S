@@ -22,7 +22,7 @@ public class BatchProcessingController {
     }
 
     @PostMapping("/tag-and-ban")
-    public ResponseEntity<?> caretTagBatch(@RequestBody UnifiedDTO unifiedDTO){
+    public ResponseEntity<?> createTagsBatch(@RequestBody UnifiedDTO unifiedDTO){
         return ResponseEntity.ok(bpService.createAndGetTagAndBanBatch(unifiedDTO));
     }
 

@@ -26,7 +26,7 @@ function TagsAndBans() {
   const fetchPending = async (url) => {
     AxiosInstance.get(url)
       .then((response) => {
-        const id = response.data.content[0].targetId;
+        const id = response.data[0].targetId;
         console.log(response);
         setMcqId(id);
       })
@@ -92,7 +92,6 @@ function TagsAndBans() {
   };
 
   const save = async () => {
-    // Using async/await for cleaner syntax
     setLoading(true);
 
     const updated = {
@@ -106,15 +105,13 @@ function TagsAndBans() {
       const response = await AxiosInstance.put(url, updated);
       setInfo("Saved successfully.");
       setLoading(false);
-
-      // Reload after 1.5 seconds if success:
       setTimeout(() => {
         window.location.reload();
-      }, 1000); // 1500 milliseconds = 1.5 seconds
+      }, 1000);
     } catch (error) {
       console.error(error);
       setInfo("Error: " + error.message + " -> " + error.response.data);
-      setLoading(false); // Set loading to false even on error
+      setLoading(false);
     }
   };
 

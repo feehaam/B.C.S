@@ -217,7 +217,7 @@ function Questions() {
                   <Card key={q.id} style={{ marginBottom: "10px" }}>
                     <MDBox pt={3} px={2}>
                       <MDTypography variant="h6" fontWeight="medium">
-                        {q.question}
+                        {q.id}. {q.question}
                       </MDTypography>
                     </MDBox>
                     <MDBox pt={1} pb={1} px={2}>
