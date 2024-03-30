@@ -1,8 +1,10 @@
 package com.bcs.analyzer.service.v1;
 
+import com.bcs.analyzer.model.Ban;
 import com.bcs.analyzer.model.Tag;
 import com.bcs.analyzer.repository.TagRepository;
 import com.bcs.analyzer.util.Cache;
+import com.bcs.analyzer.util.ID;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import java.util.*;
 public class TagService {
 
     private final TagRepository tagRepository;
+    private final ID id;
 
     @PostConstruct
     private void loadTags(){
@@ -69,6 +72,10 @@ public class TagService {
     }
 
     private void reloadTags(){
-        Cache.setAllTags(tagRepository.findAll());
+        List<Tag> tags = tagRepository.findAll();
+        tags.forEach(tag -> {
+            id.lastTagId = Math.max(id.lastTagId, tag.getId());
+        });
+        Cache.setAllTags(tags);
     }
 }

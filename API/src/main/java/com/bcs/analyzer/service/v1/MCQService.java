@@ -8,6 +8,7 @@ import com.bcs.analyzer.repository.MCQRepository;
 import com.bcs.analyzer.repository.PARepository;
 import com.bcs.analyzer.repository.TagRepository;
 import com.bcs.analyzer.util.Cache;
+import com.bcs.analyzer.util.ID;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +27,7 @@ public class MCQService extends MCQFormatter{
     private final PARepository paRepository;
     private final BanService banService;
     private final TagService tagService;
+    private final ID id;
 
     @PostConstruct
     private void loadTags(){
@@ -153,13 +155,18 @@ public class MCQService extends MCQFormatter{
         paRepository.saveAll(pendingAnalyzers);
     }
 
-    private void setSubjectBasedTags() {
+    public void setSubjectBasedTags() {
         List<Object[]> allMCQ = mcqRepository.findAllWithSubjectAndTags();
-        for(Object object[]: allMCQ){
-            String subject = (String) object[0];
-            Tag tag = (Tag) object[1];
-            Cache.setAllSubjectBasedTags(subject, tag);
+        MCQ mcq = null;
+        for(Object[] object : allMCQ){
+            mcq = (MCQ) object[0];
+            id.lastMCQId = Math.max(id.lastMCQId, mcq.getId());
+            final String subject = mcq.getSubject();
+            List<Tag> tags = mcq.getTags();
+            if(tags == null) tags = new ArrayList<>();
+            tags.forEach(tag -> {
+                Cache.setAllSubjectBasedTags(subject, tag);
+            });
         }
-        int x = 10;
     }
 }

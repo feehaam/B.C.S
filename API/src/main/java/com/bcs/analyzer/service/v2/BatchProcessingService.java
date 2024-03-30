@@ -8,6 +8,7 @@ import com.bcs.analyzer.repository.BanRepository;
 import com.bcs.analyzer.repository.MCQRepository;
 import com.bcs.analyzer.repository.PARepository;
 import com.bcs.analyzer.repository.TagRepository;
+import com.bcs.analyzer.util.ID;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,19 +21,22 @@ public class BatchProcessingService extends HelperService {
     private final MCQRepository mcqRepository;
     private final TagRepository tagRepository;
     private final BanRepository banRepository;
+    private final ID id;
 
     public BatchProcessingService(MCQRepository mcqRepository, PARepository paRepository,
-                                  TagRepository tagRepository, BanRepository banRepository) {
-        super(paRepository);
+                                  TagRepository tagRepository, BanRepository banRepository, ID id) {
+        super(paRepository, id);
         this.mcqRepository = mcqRepository;
         this.tagRepository = tagRepository;
         this.banRepository = banRepository;
+        this.id = id;
     }
 
     public List<MCQ> createBatchMCQ(List<UnifiedDTO> mcqdtoList){
         List<MCQ> mcqList = new ArrayList<>();
         for(UnifiedDTO unifiedDTO: mcqdtoList){
             MCQ mcq = MCQ.builder()
+                    .id(id.lastMCQId++)
                     .question(unifiedDTO.getQuestion())
                     .optionA(unifiedDTO.getOptionA()).optionB(unifiedDTO.getOptionB())
                     .optionC(unifiedDTO.getOptionC()).optionD(unifiedDTO.getOptionD())
@@ -58,14 +62,14 @@ public class BatchProcessingService extends HelperService {
         unifiedDTO.getTagWords().forEach(tagWord -> {
             if(!allTagsString.contains(tagWord.toLowerCase())){
                 // Cache the tag word
-                newTags.add(new Tag(0, tagWord, new ArrayList<>()));
+                newTags.add(new Tag(id.lastTagId++, tagWord, new ArrayList<>()));
                 allTagsString.add(tagWord.toLowerCase());
             }
         });
         unifiedDTO.getBans().forEach(banWord -> {
             if(!allBansAsString.contains(banWord.toLowerCase())){
                 // Cache the ban word
-                newBans.add(new Ban(0, banWord.toLowerCase()));
+                newBans.add(new Ban(id.lastBanId++, banWord.toLowerCase()));
                 allBansAsString.add(banWord);
             }
         });

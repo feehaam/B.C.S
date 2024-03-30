@@ -5,6 +5,7 @@ import com.bcs.analyzer.model.Tag;
 import com.bcs.analyzer.model.UnifiedDTO;
 import com.bcs.analyzer.repository.MCQRepository;
 import com.bcs.analyzer.repository.PARepository;
+import com.bcs.analyzer.util.ID;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +19,14 @@ public class UnifiedService extends HelperService {
 
     private final MCQRepository mcqRepository;
     private final BatchProcessingService bpService;
+    private final ID id;
     private final List<String> sortBy = List.of("Similarity Index", "Year", "Update Time", "Alphabetically");
 
-    public UnifiedService(MCQRepository mcqRepository, PARepository paRepository, BatchProcessingService bpService) {
-        super(paRepository);
+    public UnifiedService(MCQRepository mcqRepository, PARepository paRepository, BatchProcessingService bpService, ID id) {
+        super(paRepository, id);
         this.mcqRepository = mcqRepository;
         this.bpService = bpService;
+        this.id = id;
     }
 
     public Object getByFilter(Integer mcqId, Integer pageNo, Integer pageSize, Integer year,

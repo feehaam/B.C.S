@@ -131,26 +131,30 @@ const Exp = ({ mcq }) => {
             {mcq.similarity}
           </MDTypography>
         </Button>
-        {mcq.tags.map((tag, index) => (
-          <Button
-            style={{ margin: "2px", padding: "5px" }}
-            key={index}
-            startIcon={
-              <MDTypography variant="text" fontWeight="small">
-                <LocalOfferIcon />
-              </MDTypography>
-            }
-            variant="outlined"
-          >
-            <MDTypography variant="text" fontWeight="small">
-              {tag.word}
-            </MDTypography>
-          </Button>
-        ))}
-        {mcq.tags.length > 0 && (
-          <IconButton onClick={handleOpenConfirmDialog}>
-            <ResetIcon />
-          </IconButton>
+        {mcq.tags !== undefined && mcq.tags !== null && (
+          <>
+            {mcq.tags.map((tag, index) => (
+              <Button
+                style={{ margin: "2px", padding: "5px" }}
+                key={index}
+                startIcon={
+                  <MDTypography variant="text" fontWeight="small">
+                    <LocalOfferIcon />
+                  </MDTypography>
+                }
+                variant="outlined"
+              >
+                <MDTypography variant="text" fontWeight="small">
+                  {tag.word}
+                </MDTypography>
+              </Button>
+            ))}
+            {mcq.tags.length > 0 && (
+              <IconButton onClick={handleOpenConfirmDialog}>
+                <ResetIcon />
+              </IconButton>
+            )}
+          </>
         )}
         <Dialog open={openConfirmDialog} onClose={handleCloseConfirmDialog}>
           <DialogTitle>

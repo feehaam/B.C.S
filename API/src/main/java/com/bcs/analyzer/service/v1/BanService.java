@@ -3,6 +3,7 @@ package com.bcs.analyzer.service.v1;
 import com.bcs.analyzer.model.Ban;
 import com.bcs.analyzer.repository.BanRepository;
 import com.bcs.analyzer.util.Cache;
+import com.bcs.analyzer.util.ID;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.bcs.analyzer.util.Cache.allBansAsString;
 
@@ -18,15 +18,11 @@ import static com.bcs.analyzer.util.Cache.allBansAsString;
 public class BanService {
 
     private final BanRepository banRepository;
+    private final ID id;
 
     @PostConstruct
-    private void loadBans(){
-        reloadBan();
-    }
-
-    @PostConstruct
-    void addData(){
-        create("........");
+    private void init(){
+        reloadBanAndId();
     }
 
     public Ban getBanById(Integer id){
@@ -41,7 +37,7 @@ public class BanService {
     public Ban create(String word){
         word = word.toLowerCase();
         Ban result = banRepository.save(new Ban(0, word));
-        reloadBan();
+        reloadBanAndId();
         return result;
     }
 
@@ -63,16 +59,21 @@ public class BanService {
         Ban ban = banOp.get();
         ban.setWord(word);
         Ban result = banRepository.save(ban);
-        reloadBan();
+        reloadBanAndId();
         return result;
     }
 
     public void delete(Integer id){
         banRepository.deleteById(id);
-        reloadBan();
+        reloadBanAndId();
     }
 
-    private void reloadBan(){
-        Cache.initAllBans(banRepository.findAll());
+    private void reloadBanAndId(){
+        List<Ban> bans = banRepository.findAll();
+        bans.forEach(ban -> {
+            id.lastBanId = Math.max(id.lastBanId, ban.getId());
+        });
+        Cache.initAllBansAndId(bans);
     }
+
 }

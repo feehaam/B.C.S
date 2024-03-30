@@ -1,9 +1,11 @@
 package com.bcs.analyzer.util;
 
 import com.bcs.analyzer.model.Ban;
+import com.bcs.analyzer.model.MCQ;
 import com.bcs.analyzer.model.Tag;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Cache {
     public static Set<Tag> allTags = new HashSet<>();
@@ -13,7 +15,7 @@ public class Cache {
     public static ArrayList<Tag> recentTags = new ArrayList<>();
     public static Map<String, Map<String, Integer>> subjectTopTags = new HashMap<>();
 
-    public static void initAllBans(List<Ban> bans){
+    public static void initAllBansAndId(List<Ban> bans){
         allBans.addAll(bans);
         allBansAsString.addAll(bans.stream().map(Ban::getWord).toList());
     }

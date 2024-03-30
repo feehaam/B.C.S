@@ -128,7 +128,7 @@ function TagsAndBans() {
           <Card key={question.id} style={{ marginBottom: "10px" }}>
             <MDBox pt={3} px={2}>
               <MDTypography variant="h6" fontWeight="medium">
-                {question.question}
+                {question.id}. {question.question}
               </MDTypography>
             </MDBox>
             <MDBox pt={1} pb={1} px={2}>

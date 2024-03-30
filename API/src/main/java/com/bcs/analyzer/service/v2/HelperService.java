@@ -4,28 +4,26 @@ import com.bcs.analyzer.model.PendingAnalyzer;
 import com.bcs.analyzer.model.Tag;
 import com.bcs.analyzer.repository.PARepository;
 import com.bcs.analyzer.util.Cache;
+import com.bcs.analyzer.util.ID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service @RequiredArgsConstructor
 public class HelperService {
     private static final Integer ANALYZER_OPERATION_TYPE = 1;
 
     private final PARepository paRepository;
-
-    protected void updatePendingAnalyzer(Integer targetId) {
-        paRepository.save(new PendingAnalyzer(0, targetId, ANALYZER_OPERATION_TYPE, 0));
-    }
+    private final ID id;
 
     protected void updatePendingAnalyzerBatch(List<Integer> targetIds) {
         List<PendingAnalyzer> pendingAnalyzers = new ArrayList<>();
-        targetIds.forEach(tid -> pendingAnalyzers.add(new PendingAnalyzer(0, tid, ANALYZER_OPERATION_TYPE, 0)));
+        targetIds.forEach(tid -> {
+            pendingAnalyzers.add(new PendingAnalyzer(id.lastPendingAnalyzerId++, tid, ANALYZER_OPERATION_TYPE, 0));
+        });
         paRepository.saveAll(pendingAnalyzers);
     }
 
@@ -44,7 +42,7 @@ public class HelperService {
     protected void addPendingAnalyzer(int targetId) {
         PendingAnalyzer pendingAnalyzer = PendingAnalyzer
                 .builder()
-                .id(0)
+                .id(id.lastPendingAnalyzerId++)
                 .targetId(targetId)
                 .targetType(ANALYZER_OPERATION_TYPE)
                 .priority(1)
