@@ -3,7 +3,7 @@ package com.bcs.analyzer.service.v2;
 import com.bcs.analyzer.model.PendingAnalyzer;
 import com.bcs.analyzer.model.Tag;
 import com.bcs.analyzer.repository.PARepository;
-import com.bcs.analyzer.util.Cache;
+import com.bcs.analyzer.util.TagsAndBanCache;
 import com.bcs.analyzer.util.ID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -28,8 +28,8 @@ public class HelperService {
     }
 
     protected void updateTags(String subject, List<Tag> tags){
-        Cache.setRecentTags(tags);
-        Cache.addSubjectBasedTag(subject, tags);
+        TagsAndBanCache.setRecentTags(tags);
+        TagsAndBanCache.addSubjectBasedTag(subject, tags);
     }
 
     protected void removePendingAnalyzer(int targetId) {

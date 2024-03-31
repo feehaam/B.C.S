@@ -1,9 +1,8 @@
 package com.bcs.analyzer.service.v1;
 
-import com.bcs.analyzer.model.Ban;
 import com.bcs.analyzer.model.Tag;
 import com.bcs.analyzer.repository.TagRepository;
-import com.bcs.analyzer.util.Cache;
+import com.bcs.analyzer.util.TagsAndBanCache;
 import com.bcs.analyzer.util.ID;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -76,6 +75,6 @@ public class TagService {
         tags.forEach(tag -> {
             id.lastTagId = Math.max(id.lastTagId, tag.getId());
         });
-        Cache.setAllTags(tags);
+        TagsAndBanCache.setAllTags(tags);
     }
 }

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static com.bcs.analyzer.util.Cache.*;
+import static com.bcs.analyzer.util.TagsAndBanCache.*;
 
 @Service
 public class BatchProcessingService extends HelperService {
@@ -37,10 +37,11 @@ public class BatchProcessingService extends HelperService {
         for(UnifiedDTO unifiedDTO: mcqdtoList){
             MCQ mcq = MCQ.builder()
                     .id(id.lastMCQId++)
-                    .question(unifiedDTO.getQuestion())
-                    .optionA(unifiedDTO.getOptionA()).optionB(unifiedDTO.getOptionB())
-                    .optionC(unifiedDTO.getOptionC()).optionD(unifiedDTO.getOptionD())
-                    .answer(unifiedDTO.getAnswer()).year(unifiedDTO.getYear()).explanation(unifiedDTO.getExplanation())
+                    .question(clean(unifiedDTO.getQuestion()))
+                    .optionA(clean(unifiedDTO.getOptionA())).optionB(clean(unifiedDTO.getOptionB()))
+                    .optionC(clean(unifiedDTO.getOptionC())).optionD(clean(unifiedDTO.getOptionD()))
+                    .answer(unifiedDTO.getAnswer()).year(unifiedDTO.getYear())
+                    .explanation(clean(unifiedDTO.getExplanation()))
                     .updateTime(LocalDateTime.now())
                     .subject(unifiedDTO.getSubject()).similarity(0).build();
             mcqList.add(mcq);
@@ -52,6 +53,14 @@ public class BatchProcessingService extends HelperService {
         updatePendingAnalyzerBatch(idList);
 
         return results;
+    }
+
+    private String clean(String text){
+        text = text.strip();
+        while(text.contains("  ")){
+            text = text.replace("  ", " ");
+        }
+        return text;
     }
 
     public Map<String, Object> createAndGetTagAndBanBatch(UnifiedDTO unifiedDTO) {

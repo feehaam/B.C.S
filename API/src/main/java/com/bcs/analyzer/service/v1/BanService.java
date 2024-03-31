@@ -2,7 +2,7 @@ package com.bcs.analyzer.service.v1;
 
 import com.bcs.analyzer.model.Ban;
 import com.bcs.analyzer.repository.BanRepository;
-import com.bcs.analyzer.util.Cache;
+import com.bcs.analyzer.util.TagsAndBanCache;
 import com.bcs.analyzer.util.ID;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.bcs.analyzer.util.Cache.allBansAsString;
+import static com.bcs.analyzer.util.TagsAndBanCache.allBansAsString;
 
 @Service @RequiredArgsConstructor
 public class BanService {
@@ -73,7 +73,7 @@ public class BanService {
         bans.forEach(ban -> {
             id.lastBanId = Math.max(id.lastBanId, ban.getId());
         });
-        Cache.initAllBansAndId(bans);
+        TagsAndBanCache.initAllBansAndId(bans);
     }
 
 }

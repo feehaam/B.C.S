@@ -1,18 +1,17 @@
 package com.bcs.analyzer.util;
 
 import com.bcs.analyzer.model.Ban;
-import com.bcs.analyzer.model.MCQ;
 import com.bcs.analyzer.model.Tag;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
-public class Cache {
+public class TagsAndBanCache {
     public static Set<Tag> allTags = new HashSet<>();
     public static Set<String> allTagsString = new HashSet<>();
     public static Set<Ban> allBans = new HashSet<>();
     public static Set<String> allBansAsString = new HashSet<>();
     public static ArrayList<Tag> recentTags = new ArrayList<>();
+    public static Set<String> subjects = new HashSet<>();
     public static Map<String, Map<String, Integer>> subjectTopTags = new HashMap<>();
 
     public static void initAllBansAndId(List<Ban> bans){

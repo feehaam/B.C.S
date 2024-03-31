@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.bcs.analyzer.util.Cache.*;
+import static com.bcs.analyzer.util.TagsAndBanCache.*;
 
 @Service @RequiredArgsConstructor
 public class TagSuggestion {
@@ -41,7 +41,7 @@ public class TagSuggestion {
                 + " " + mcq.getOptionB()
                 + " " + mcq.getOptionC()
                 + " " + mcq.getOptionD())){
-            if(!(allBansAsString.contains(word) && allTagsString.contains(word))){
+            if(!(allBansAsString.contains(word) || allTagsString.contains(word))){
                 bans.add(word);
             }
         }
@@ -62,7 +62,7 @@ public class TagSuggestion {
         });
     }
 
-    private static Set<String> getWordsFromString(String str){
+    public static Set<String> getWordsFromString(String str){
         String[] words = removeExtraSpaces(specialCharacterToSpace(str)).split(" ");
         return new HashSet<>(List.of(removeExtraSpaces(specialCharacterToSpace(str)).split(" ")));
     }

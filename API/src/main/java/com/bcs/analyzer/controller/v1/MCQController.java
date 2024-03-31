@@ -26,17 +26,6 @@ public class MCQController {
         return ResponseEntity.ok(mcq);
     }
 
-    @GetMapping
-    public ResponseEntity<?> getByFilter(
-            @RequestParam(required = false, name = "pageNo") Integer pageNo,
-            @RequestParam(required = false, name = "pageSize") Integer pageSize,
-            @RequestParam(required = false, name = "year") Integer year,
-            @RequestParam(required = false, name = "subject") String subject,
-            @RequestParam(required = false, name = "search") String search,
-            @RequestParam(required = false, name = "tags") String[] tags) {
-        return ResponseEntity.ok(mcqService.getByFilter(pageNo, pageSize, year, subject, search, tags));
-    }
-
     @PostMapping
     public ResponseEntity<MCQ> createMCQ(@RequestBody MCQDTO mcqdto) {
         MCQ mcq = mcqService.create(mcqdto);

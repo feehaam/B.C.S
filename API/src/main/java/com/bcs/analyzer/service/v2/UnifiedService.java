@@ -6,97 +6,38 @@ import com.bcs.analyzer.model.UnifiedDTO;
 import com.bcs.analyzer.repository.MCQRepository;
 import com.bcs.analyzer.repository.PARepository;
 import com.bcs.analyzer.util.ID;
-import org.springframework.data.domain.PageRequest;
+import com.bcs.analyzer.util.MCQCache;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static com.bcs.analyzer.util.Cache.*;
+import static com.bcs.analyzer.util.TagsAndBanCache.*;
 
 @Service
 public class UnifiedService extends HelperService {
 
     private final MCQRepository mcqRepository;
     private final BatchProcessingService bpService;
+    private final MCQFilter mcqFilter;
     private final ID id;
-    private final List<String> sortBy = List.of("Similarity Index", "Year", "Update Time", "Alphabetically");
 
-    public UnifiedService(MCQRepository mcqRepository, PARepository paRepository, BatchProcessingService bpService, ID id) {
+    public UnifiedService(MCQRepository mcqRepository, PARepository paRepository, BatchProcessingService bpService, MCQFilter mcqFilter, ID id) {
         super(paRepository, id);
         this.mcqRepository = mcqRepository;
         this.bpService = bpService;
+        this.mcqFilter = mcqFilter;
         this.id = id;
-    }
-
-    public Object getByFilter(Integer mcqId, Integer pageNo, Integer pageSize, Integer year,
-                                           String subject, String search, String sortBy, String... tags) {
-        if(mcqId != null){
-            return mcqRepository.findById(mcqId);
-        }
-        List<MCQ> results;
-        int pageNumber = pageNo != null ? pageNo - 1 : 0;
-        List<String> tagsList = tags == null ? new ArrayList<>() : Arrays.stream(tags).toList();
-        boolean allFiltersNull = year == null && subject == null && search == null && tagsList.isEmpty();
-        boolean allParamsNull = allFiltersNull && pageNo == null && pageSize == null;
-
-        if(allParamsNull){
-            results = mcqRepository.findAll();
-        }
-        else if (allFiltersNull) {
-            results = mcqRepository.findAll(PageRequest.of(pageNo, pageSize)).getContent();
-        } else {
-            results = mcqRepository.findAllByFiltersV2(year, subject, search, tagsList.isEmpty() ? null : tagsList);
-        }
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("pageNo", pageNo);
-        response.put("pageSize", pageSize);
-        response.put("year", year);
-        response.put("subject", subject);
-        response.put("search", search);
-        response.put("tags", tagsList);
-        response.put("sortBy", sortBy);
-        response.put("resultsCount", results.size());
-        response.put("results", sort(sortBy, results));
-        return response;
-    }
-
-    private List<MCQ> sort(String sortBy, List<MCQ> results){
-        if (sortBy == null) {
-            return results;
-        }
-        else if (sortBy.equals(this.sortBy.get(0))){
-            results.sort(Comparator.comparing(MCQ::getSimilarity).reversed());
-        }
-        else if (sortBy.equals(this.sortBy.get(1))){
-            results.sort(Comparator.comparing(MCQ::getYear).reversed());
-        }
-        else if (sortBy.equals(this.sortBy.get(2))){
-            results.sort(Comparator.comparing(MCQ::getUpdateTime).reversed());
-            List<MCQ> chunked = new ArrayList<>();
-            for(MCQ mcq: results){
-                if(mcq.getUpdateTime().isAfter(LocalDateTime.now().minusDays(4))){
-                    chunked.add(mcq);
-                }
-                else break;
-            }
-            results = chunked;
-        }
-        else if (sortBy.equals(this.sortBy.get(3))){
-            results.sort(Comparator.comparing(MCQ::getQuestion));
-        }
-        return results;
     }
 
     public Map<String, Object> getFilters(){
         Map<String, Object> filter = new HashMap<>();
         filter.put("tags", getSorted(allTagsString));
-        filter.put("subjects", getSorted(subjectTopTags.keySet()));
+        filter.put("subjects", subjects);
         List<Integer> years = new ArrayList<>();
         for(int i=45; i>=10; i--) years.add(i);
         filter.put("years", years);
-        filter.put("sortBy", sortBy);
+        filter.put("sortBy", MCQFilter.sortBy);
         return filter;
     }
 
@@ -104,6 +45,11 @@ public class UnifiedService extends HelperService {
         String [] elements = collection.toArray(new String[0]);
         Arrays.sort(elements);
         return elements;
+    }
+
+    public Object getByFilter(Integer mcqId, Integer pageNo, Integer pageSize, Integer year,
+                              String subject, String search, String sortBy, String... tags) {
+        return mcqFilter.getByFilter(mcqId, pageNo, pageSize, year, subject, search, sortBy, tags);
     }
 
     public MCQ setBanAndTags(Integer id, UnifiedDTO mcqdto){

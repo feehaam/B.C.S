@@ -149,11 +149,9 @@ const Exp = ({ mcq }) => {
                 </MDTypography>
               </Button>
             ))}
-            {mcq.tags.length > 0 && (
-              <IconButton onClick={handleOpenConfirmDialog}>
-                <ResetIcon />
-              </IconButton>
-            )}
+            <IconButton onClick={handleOpenConfirmDialog}>
+              <ResetIcon />
+            </IconButton>
           </>
         )}
         <Dialog open={openConfirmDialog} onClose={handleCloseConfirmDialog}>

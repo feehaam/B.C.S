@@ -7,22 +7,25 @@ import com.bcs.analyzer.model.Tag;
 import com.bcs.analyzer.repository.MCQRepository;
 import com.bcs.analyzer.repository.PARepository;
 import com.bcs.analyzer.repository.TagRepository;
-import com.bcs.analyzer.util.Cache;
+import com.bcs.analyzer.util.MCQCache;
+import com.bcs.analyzer.util.TagsAndBanCache;
 import com.bcs.analyzer.util.ID;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.*;
 
+import static com.bcs.analyzer.util.TagsAndBanCache.subjects;
+
 @Service @RequiredArgsConstructor
 public class MCQService extends MCQFormatter{
     private static final Integer ANALYZER_OPERATION_TYPE = 1;
 
     private final MCQRepository mcqRepository;
+    private final MCQCache mcqCache;
     private final TagRepository tagRepository;
     private final PARepository paRepository;
     private final BanService banService;
@@ -31,42 +34,12 @@ public class MCQService extends MCQFormatter{
 
     @PostConstruct
     private void loadTags(){
-        setSubjectBasedTags();
+        setSubjectAndTags();
     }
 
     public MCQ getMCQById(Integer id){
         Optional<MCQ> mcq = mcqRepository.findById(id);
         return mcq.orElse(null);
-    }
-
-    public Map<String, Object> getByFilter(Integer pageNo, Integer pageSize, Integer year, String subject, String search, String... tags) {
-        int pageNumber = pageNo != null ? pageNo - 1 : 0;
-        List<MCQ> results;
-        List<String> tagsList = tags != null ?
-                tagRepository.findAllByIds(Arrays
-                                .stream(tags)
-                                .map(Integer::parseInt)
-                                .toList())
-                        .stream()
-                        .map(Tag::getWord)
-                        .toList()
-                : Collections.emptyList();
-        boolean allFiltersNull = year == null && subject == null && search == null && tagsList.isEmpty();
-        if (allFiltersNull) {
-            results = mcqRepository.findAll(PageRequest.of(pageNo, pageSize)).getContent();
-        } else {
-            results = mcqRepository.findAllByFilters(year, subject, search, tagsList.isEmpty() ? null : tagsList);
-        }
-        Map<String, Object> response = new HashMap<>();
-        response.put("pageNo", pageNo);
-        response.put("pageSize", pageSize);
-        response.put("year", year);
-        response.put("subject", subject);
-        response.put("search", search);
-        response.put("tags", tagsList);
-        response.put("resultsCount", results.size());
-        response.put("results", results);
-        return response;
     }
 
     public MCQ create(MCQDTO mcqdto){
@@ -142,7 +115,7 @@ public class MCQService extends MCQFormatter{
     }
 
     private void updateRecentTags(List<Tag> tags){
-        Cache.setRecentTags(tags);
+        TagsAndBanCache.setRecentTags(tags);
     }
 
     private void updatePendingAnalyzer(Integer targetId) {
@@ -155,18 +128,17 @@ public class MCQService extends MCQFormatter{
         paRepository.saveAll(pendingAnalyzers);
     }
 
-    public void setSubjectBasedTags() {
-        List<Object[]> allMCQ = mcqRepository.findAllWithSubjectAndTags();
-        MCQ mcq = null;
-        for(Object[] object : allMCQ){
-            mcq = (MCQ) object[0];
+    public void setSubjectAndTags() {
+        List<MCQ> allMCQ = mcqCache.getAll();
+        allMCQ.forEach(mcq -> {
             id.lastMCQId = Math.max(id.lastMCQId, mcq.getId());
             final String subject = mcq.getSubject();
             List<Tag> tags = mcq.getTags();
             if(tags == null) tags = new ArrayList<>();
+            subjects.add(subject);
             tags.forEach(tag -> {
-                Cache.setAllSubjectBasedTags(subject, tag);
+                TagsAndBanCache.setAllSubjectBasedTags(subject, tag);
             });
-        }
+        });
     }
 }

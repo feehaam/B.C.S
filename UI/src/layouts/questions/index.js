@@ -38,7 +38,7 @@ function Questions() {
   };
 
   useEffect(() => {
-    fetchData("http://localhost:8000/unified?pageNo=0&pageSize=200");
+    fetchData("http://localhost:8000/unified?pageNo=1&pageSize=200");
   }, []);
 
   function applyFilter(type, value, action) {
