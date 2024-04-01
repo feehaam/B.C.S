@@ -24,11 +24,12 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build
 
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.jar'
+          path: '${{ github.workspace }}\build\libs\*.jar'
 
   deploy:
     runs-on: windows-latest
@@ -36,21 +37,12 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
           name: java-app
-      
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_F067556EC95E4C148678298B97004195 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_7181375E8E1D49D284445A1517253CC9 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_17BF0E2A56F04413BA9B0A6BA14FF710 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -58,5 +50,5 @@ jobs:
         with:
           app-name: 'bcs-game'
           slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F3C11868E89E472CB156ADF908178A2B }}
           package: '*SNAPSHOT.jar'
-          
