@@ -24,7 +24,10 @@ public class SecurityConfig {
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:3000");
         config.addAllowedOrigin("http://bcs-hunt.netlify.app/");
+        config.addAllowedOrigin("http://bcs-hunt.netlify.app");
+        config.addAllowedOrigin("https://bcs-hunt.netlify.app/");
         config.addAllowedOrigin("https://bcs-hunt.netlify.app");
+        
         config.addAllowedHeader("*");
         config.addAllowedMethod("GET");
         config.addAllowedMethod("POST");
