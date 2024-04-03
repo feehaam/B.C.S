@@ -34,7 +34,7 @@ const Exp = ({ mcq }) => {
   };
 
   const removeTags = () => {
-    const url = "http://localhost:8000/unified/" + mcq.id;
+    const url = "https://bcs-game.azurewebsites.net/unified/" + mcq.id;
     AxiosInstance.delete(url)
       .then((response) => {
         console.log(response);
@@ -45,13 +45,18 @@ const Exp = ({ mcq }) => {
   };
 
   const renderExplanation = () => {
-    if (isImageURL(mcq.explanation)) {
-      return +(
-        <img
-          src={mcq.explanation}
-          alt="Explanation"
-          style={{ width: "100%", maxHeight: "400px" }}
-        />
+    if (mcq.explanation.includes("http")) {
+      return (
+        <div style={{ fontSize: "medium" }}>
+          <MDTypography variant="text" fontWeight="small">
+            <b>Explanation:</b>
+          </MDTypography>
+          <img
+            src={mcq.explanation}
+            alt="Explanation"
+            style={{ width: "100%", maxHeight: "400px" }}
+          />
+        </div>
       );
     } else {
       return (
@@ -149,11 +154,11 @@ const Exp = ({ mcq }) => {
                 </MDTypography>
               </Button>
             ))}
-            <IconButton onClick={handleOpenConfirmDialog}>
-              <ResetIcon />
-            </IconButton>
           </>
         )}
+        <IconButton onClick={handleOpenConfirmDialog}>
+          <ResetIcon />
+        </IconButton>
         <Dialog open={openConfirmDialog} onClose={handleCloseConfirmDialog}>
           <DialogTitle>
             <Typography variant="h6">Confirm Reset</Typography>

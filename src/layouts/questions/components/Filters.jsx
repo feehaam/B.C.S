@@ -10,7 +10,7 @@ const Filters = ({ applyFilter }) => {
   }, []);
 
   useEffect(() => {
-    AxiosInstance.get("http://localhost:8000/unified/filters")
+    AxiosInstance.get("https://bcs-game.azurewebsites.net/unified/filters")
       .then((response) => {
         setParams(response.data);
         console.log(response);

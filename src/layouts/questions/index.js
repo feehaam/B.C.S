@@ -38,7 +38,7 @@ function Questions() {
   };
 
   useEffect(() => {
-    fetchData("http://localhost:8000/unified?pageNo=1&pageSize=200");
+    fetchData(process.env.REACT_APP_BASE_URL + "/unified?pageNo=1&pageSize=200");
   }, []);
 
   function applyFilter(type, value, action) {
@@ -81,7 +81,7 @@ function Questions() {
 
   const submit = () => {
     // Prepare the URL with filter parameters
-    let url = "http://localhost:8000/unified?";
+    let url = "https://bcs-game.azurewebsites.net/unified?";
     for (const key in filter) {
       if (filter[key] !== null && filter[key] !== undefined) {
         if (key === "year") {

@@ -36,7 +36,7 @@ function TagsAndBans() {
   };
 
   useEffect(() => {
-    fetchPending("http://localhost:8000/batch/pending");
+    fetchPending("https://bcs-game.azurewebsites.net/batch/pending");
   }, []);
 
   const fetchData = async (url) => {
@@ -51,7 +51,7 @@ function TagsAndBans() {
   };
 
   useEffect(() => {
-    fetchData("http://localhost:8000/unified?mcqId=" + mcqId);
+    fetchData("https://bcs-game.azurewebsites.net/unified?mcqId=" + mcqId);
     console.log("id updated to " + mcqId);
   }, [mcqId]);
 
@@ -69,7 +69,7 @@ function TagsAndBans() {
   };
 
   useEffect(() => {
-    fetchSuggestions("http://localhost:8000/util/suggest-tags/" + mcqId);
+    fetchSuggestions("https://bcs-game.azurewebsites.net/util/suggest-tags/" + mcqId);
     console.log("suggestions " + mcqId);
   }, [mcqId]);
 
@@ -99,7 +99,7 @@ function TagsAndBans() {
       bans: selBans,
     };
 
-    const url = "http://localhost:8000/unified/" + question.id;
+    const url = "https://bcs-game.azurewebsites.net/unified/" + question.id;
 
     try {
       const response = await AxiosInstance.put(url, updated);
