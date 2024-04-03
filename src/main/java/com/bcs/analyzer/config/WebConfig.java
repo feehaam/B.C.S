@@ -10,7 +10,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://bcs-hunt.netlify.app") // Update this with your frontend URL
+                .allowedOrigins("http://bcs-hunt.netlify.app") // Update this with your frontend URL
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true)
